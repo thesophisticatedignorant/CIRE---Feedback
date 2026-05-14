@@ -9,7 +9,7 @@ export default function NewsletterPopup({ onClose }) {
         setStatus('submitting');
 
         try {
-            const response = await fetch('http://localhost:3000/api/newsletter', {
+            const response = await fetch('http://localhost:3001/api/newsletter', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

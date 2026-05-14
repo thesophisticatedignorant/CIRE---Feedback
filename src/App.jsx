@@ -5,9 +5,10 @@ import NewsletterPopup from "./components/NewsletterPopup.jsx";
 import { useWindowManager } from "./context/WindowManager.jsx";
 
 import GuestbookPopup from "./components/GuestbookPopup.jsx";
+import TikTokCurationWindow from "./components/windows/TikTokCurationWindow.jsx";
 
 export default function App() {
-  const { isSubscribePopupOpen, toggleSubscribePopup, isGuestbookOpen, toggleGuestbook } = useWindowManager();
+  const { isSubscribePopupOpen, toggleSubscribePopup, isGuestbookOpen, toggleGuestbook, isCuratedContentOpen, toggleCuratedContent } = useWindowManager();
 
   return (
     <div style={{ height: "100%", width: "100%", position: "relative" }}>
@@ -20,6 +21,9 @@ export default function App() {
       )}
       {isGuestbookOpen && (
         <GuestbookPopup onClose={() => toggleGuestbook(false)} />
+      )}
+      {isCuratedContentOpen && (
+        <TikTokCurationWindow onClose={() => toggleCuratedContent(false)} />
       )}
     </div>
   );

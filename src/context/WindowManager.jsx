@@ -78,6 +78,7 @@ export function WindowManagerProvider({ children }) {
   const [selectedFolder, setSelectedFolder] = useState('archive');
   const [isSubscribePopupOpen, setIsSubscribePopupOpen] = useState(false);
   const [isGuestbookOpen, setIsGuestbookOpen] = useState(false);
+  const [isCuratedContentOpen, setIsCuratedContentOpen] = useState(false);
 
   useEffect(() => {
     let lastWidth = window.innerWidth;
@@ -296,6 +297,8 @@ export function WindowManagerProvider({ children }) {
     toggleSubscribePopup: (isOpen) => setIsSubscribePopupOpen(isOpen),
     isGuestbookOpen,
     toggleGuestbook: (isOpen) => setIsGuestbookOpen(isOpen),
+    isCuratedContentOpen,
+    toggleCuratedContent: (isOpen) => setIsCuratedContentOpen(isOpen),
     openMasterWithFolder: (folderKey) => {
       setSelectedFolder(folderKey);
       // Open and focus the master window

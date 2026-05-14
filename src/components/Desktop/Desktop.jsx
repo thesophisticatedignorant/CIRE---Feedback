@@ -19,7 +19,7 @@ const windowContentMap = {
 };
 
 export default function Desktop() {
-  const { windows, restoreWindow, toggleGraphiteMode, openWindow, closeWindow, toggleMinimize, updatePosition, bringToFront, openMasterWithFolder, toggleGuestbook } = useWindowManager();
+  const { windows, restoreWindow, toggleGraphiteMode, openWindow, closeWindow, toggleMinimize, updatePosition, bringToFront, openMasterWithFolder, toggleGuestbook, toggleSubscribePopup, toggleCuratedContent } = useWindowManager();
 
   return (
     <div className="desktop">
@@ -62,8 +62,8 @@ export default function Desktop() {
       <Folder x="calc(max(50vw, 750px) - 636px)" y="27px" label="CIRE" onClick={() => openMasterWithFolder("archive")} />
       <Folder x="calc(max(50vw, 750px) - 689px)" y="113px" label="Sophisticated Brilliance" onClick={() => openMasterWithFolder("sophisticated-brilliance")} />
       <Folder x="calc(max(50vw, 750px) - 571px)" y="95px" label="Sophisticated Ignorance" onClick={() => openMasterWithFolder("sophisticated-ignorance")} />
-      <Folder x="calc(max(50vw, 750px) - 539px)" y="204px" label="*COMING SOON*" onClick={() => openMasterWithFolder("coming-soon")} />
-      <Folder x="calc(max(50vw, 750px) - 582px)" y="332px" label="Curated Content" onClick={() => openMasterWithFolder("curated")} />
+      <Folder x="calc(max(50vw, 750px) - 539px)" y="204px" label="Join Network" onClick={() => toggleSubscribePopup(true)} />
+      <Folder x="calc(max(50vw, 750px) - 582px)" y="332px" label="Curated Content" onClick={() => toggleCuratedContent(true)} />
 
       {/* Guestbook Trigger */}
       <Folder x="calc(max(50vw, 750px) - 480px)" y="332px" label="Guestbook" onClick={() => toggleGuestbook(true)} />

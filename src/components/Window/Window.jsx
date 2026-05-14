@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Draggable from "react-draggable";
 
 export default function Window({
@@ -17,11 +17,21 @@ export default function Window({
   onToggleGraphiteMode,
   graphiteMode,
 }) {
-  const nodeRef = React.useRef(null);
+  const nodeRef = useRef(null);
+  const isDragging = useRef(false);
 
-  const [bounds, setBounds] = React.useState({ left: 0, top: 0, right: 0, bottom: 0 });
+  const [localPos, setLocalPos] = useState({ x, y });
+  const [bounds, setBounds] = useState({ left: 0, top: 0, right: 0, bottom: 0 });
+
+  // Sync with global state only when not dragging
+  useEffect(() => {
+    if (!isDragging.current && !graphiteMode) {
+      setLocalPos({ x, y });
+    }
+  }, [x, y, graphiteMode]);
 
   const handleStart = () => {
+    isDragging.current = true;
     if (nodeRef.current && nodeRef.current.offsetParent) {
       const parent = nodeRef.current.offsetParent;
       const width = nodeRef.current.offsetWidth;
@@ -36,8 +46,16 @@ export default function Window({
     onFocus(id);
   };
 
-  const handleStop = (e, data) => {
+  const handleDrag = (e, data) => {
     if (!graphiteMode) {
+      setLocalPos({ x: data.x, y: data.y });
+    }
+  };
+
+  const handleStop = (e, data) => {
+    isDragging.current = false;
+    if (!graphiteMode) {
+      setLocalPos({ x: data.x, y: data.y });
       onDragStop(id, data.x, data.y);
     }
   };
@@ -47,9 +65,9 @@ export default function Window({
       nodeRef={nodeRef}
       handle=".window-titlebar"
       cancel=".window-controls, .window-btn"
-      defaultPosition={{ x, y }}
-      position={graphiteMode ? { x: 0, y: 0 } : { x, y }}
+      position={graphiteMode ? { x: 0, y: 0 } : localPos}
       onStart={handleStart}
+      onDrag={handleDrag}
       onStop={handleStop}
       disabled={graphiteMode} // Disable dragging in graphite mode
       bounds={bounds}

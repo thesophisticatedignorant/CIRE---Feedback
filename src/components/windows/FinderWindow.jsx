@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useWindowManager } from '../../context/WindowManager';
+import PasswordPrompt from '../PasswordPrompt';
 
 // Tag color mapping
 const tagColors = {
@@ -14,7 +15,7 @@ const tagColors = {
 const tagsList = [];
 
 export default function FinderWindow() {
-    const { openWindow, openFileWindow, selectedFolder, setSelectedFolder, toggleSubscribePopup } = useWindowManager();
+    const { openWindow, openFileWindow, selectedFolder, setSelectedFolder, toggleSubscribePopup, toggleCuratedContent } = useWindowManager();
     const [currentView, setCurrentView] = useState('icons');
     const [selectedGalleryIndex, setSelectedGalleryIndex] = useState(0);
     const [viewMenuOpen, setViewMenuOpen] = useState(false);
@@ -22,6 +23,7 @@ export default function FinderWindow() {
     const [fileTags, setFileTags] = useState({});
     const tagsInputRef = useRef(null);
     const tagsDropdownRef = useRef(null);
+    const [pendingFolder, setPendingFolder] = useState(null);
 
     // File mappings for each folder
     const filesByFolder = {
@@ -93,9 +95,16 @@ export default function FinderWindow() {
         'Maison Manifest': () => setSelectedFolder('maison'),
         'Transcendence of Man': () => setSelectedFolder('video'),
         'Power Perfected in Position': () => setSelectedFolder('power'),
+        'Foundations': () => setSelectedFolder('foundations'),
     };
 
     const handleFileClick = (fileName) => {
+        const restrictedFolders = ['Fortifications', 'Relics', 'Dominion', 'Adornments', 'Crownworks'];
+        if (restrictedFolders.includes(fileName)) {
+            setPendingFolder(fileName.toLowerCase());
+            return;
+        }
+
         const action = fileActions[fileName];
         if (action) {
             action();
@@ -349,6 +358,8 @@ export default function FinderWindow() {
                             onClick={() => {
                                 if (folder.key === 'subscribe') {
                                     toggleSubscribePopup(true);
+                                } else if (folder.key === 'curated') {
+                                    toggleCuratedContent(true);
                                 } else {
                                     setSelectedFolder(folder.key);
                                 }
@@ -364,6 +375,15 @@ export default function FinderWindow() {
                 {/* File View */}
                 {currentView === 'gallery' ? renderGalleryView() : currentView === 'list' ? renderListView() : renderIconsView()}
             </div>
+            {pendingFolder && (
+                <PasswordPrompt 
+                    onCancel={() => setPendingFolder(null)}
+                    onSuccess={() => {
+                        setSelectedFolder(pendingFolder);
+                        setPendingFolder(null);
+                    }}
+                />
+            )}
         </div>
     );
 }

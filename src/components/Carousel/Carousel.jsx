@@ -17,6 +17,12 @@ export default function Carousel({ direction = 'left' }) {
                 {allItems.map((item, index) => (
                     <div key={`${item.id}-${index}`} className="carousel-item" style={{ backgroundColor: item.color }}>
                         <span className="carousel-item-title">{item.title}</span>
+                        <div className="carousel-overlay">
+                            <div className="carousel-overlay-text">
+                                ITEM:<br/>
+                                COLLECTION:
+                            </div>
+                        </div>
                     </div>
                 ))}
             </div>
