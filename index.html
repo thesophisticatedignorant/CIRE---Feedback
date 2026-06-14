@@ -1593,10 +1593,11 @@
             .marquee {
                 mask-image: none;
             }
+        }
 
-            .marquee {
-                mask-image: none;
-            }
+        /* Modal Visibility */
+        .visible {
+            opacity: 1 !important;
         }
 
         /* Green Screen Banner Variant */
@@ -1928,15 +1929,24 @@
             </label>
         </div>
 
-        <!-- Desktop Folders - matching your existing layout -->
         <div class="desktop-folder" id="macintosh-hd">
             <i class="fas fa-desktop icon gray"></i>
             <div class="label">Macintosh HD</div>
         </div>
 
-        <div class="desktop-folder" data-folder="archive">
+        <div class="desktop-folder" data-folder="cire-canon">
             <i class="fas fa-folder icon blue"></i>
-            <div class="label">CIRE</div>
+            <div class="label">CIRE Canon</div>
+        </div>
+
+        <div class="desktop-folder" data-folder="cire-concierge">
+            <i class="fas fa-folder icon blue"></i>
+            <div class="label">CIRE Concierge</div>
+        </div>
+        
+        <div class="desktop-folder" data-folder="cire-hospitality">
+            <i class="fas fa-folder icon blue"></i>
+            <div class="label">CIRE Hospitality</div>
         </div>
 
         <div class="desktop-folder" data-folder="sophisticated-brilliance">
@@ -1947,16 +1957,6 @@
         <div class="desktop-folder" data-folder="sophisticated-ignorance">
             <i class="fas fa-folder icon blue"></i>
             <div class="label">Sophisticated Ignorance</div>
-        </div>
-
-        <div class="desktop-folder" data-folder="coming-soon">
-            <i class="fas fa-folder icon blue"></i>
-            <div class="label">*COMING SOON*</div>
-        </div>
-
-        <div class="desktop-folder" data-folder="curated">
-            <i class="fas fa-folder icon blue"></i>
-            <div class="label">Curated Content</div>
         </div>
 
         <!-- Guestbook folder removed from desktop -->
@@ -2051,7 +2051,7 @@
                     <div style="margin-bottom: 14px;">
                         <div style="font-size: 0.6rem; color: #666; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">Select Your Node</div>
                         <div id="node-selector" style="display: flex; gap: 8px; align-items: center;">
-                            <div class="wwn-node" data-color="#FF3B30" style="width: 18px; height: 18px; border-radius: 50%; background: #FF3B30; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; box-shadow: 0 0 0 2px #FF3B30;" onclick="selectNode(this, '#FF3B30')"></div>
+                            <div class="wwn-node" data-color="#FF3B30" style="width: 18px; height: 18px; border-radius: 50%; background: #FF3B30; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; box-shadow: inset 0 0 0 4px #000;" onclick="selectNode(this, '#FF3B30')"></div>
                             <div class="wwn-node" data-color="#FF9500" style="width: 18px; height: 18px; border-radius: 50%; background: #FF9500; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;" onclick="selectNode(this, '#FF9500')"></div>
                             <div class="wwn-node" data-color="#FFD60A" style="width: 18px; height: 18px; border-radius: 50%; background: #FFD60A; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;" onclick="selectNode(this, '#FFD60A')"></div>
                             <div class="wwn-node" data-color="#30D158" style="width: 18px; height: 18px; border-radius: 50%; background: #30D158; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;" onclick="selectNode(this, '#30D158')"></div>
@@ -2070,10 +2070,10 @@
                         <input type="email" id="join-email" placeholder="EMAIL *" required
                             style="width: 100%; padding: 8px 10px; background: rgba(255,255,255,0.05); border: 1px solid #333; color: #fff; font-size: 0.78rem; font-family: Helvetica, Arial, sans-serif; box-sizing: border-box; outline: none;">
 
-                        <input type="text" id="join-location" placeholder="GENERAL LOCATION"
+                        <input type="text" id="join-location" placeholder="LOCATION (OPTIONAL)"
                             style="width: 100%; padding: 8px 10px; background: rgba(255,255,255,0.05); border: 1px solid #333; color: #fff; font-size: 0.78rem; font-family: Helvetica, Arial, sans-serif; box-sizing: border-box; outline: none;">
 
-                        <input type="text" id="join-ig" placeholder="INSTAGRAM HANDLE"
+                        <input type="text" id="join-ig" placeholder="INSTAGRAM HANDLE (OPTIONAL)"
                             style="width: 100%; padding: 8px 10px; background: rgba(255,255,255,0.05); border: 1px solid #333; color: #fff; font-size: 0.78rem; font-family: Helvetica, Arial, sans-serif; box-sizing: border-box; outline: none;">
 
                         <button type="submit"
@@ -2095,7 +2095,7 @@
                             n.style.boxShadow = 'none';
                         });
                         el.style.transform = 'scale(1.35)';
-                        el.style.boxShadow = `0 0 0 2px #000, 0 0 0 3.5px ${color}`;
+                        el.style.boxShadow = `inset 0 0 0 4px #000`;
                         document.getElementById('join-node-color').value = color;
                     };
                     // Select first node by default
@@ -2104,34 +2104,43 @@
                         if (firstNode) selectNode(firstNode, '#FF3B30');
                     });
 
-                    // ── Seed Entries (20 test entries stored in localStorage) ──
-                    const SEED_ENTRIES = [
-                        { name: 'Jordan M.', email: 'j@cire.co', location: 'New York, NY', ig: '@jm_nyc', color: '#FF3B30', lat: 40.7, lng: -74.0 },
-                        { name: 'Amara O.', email: 'a@test.co', location: 'Lagos, NG', ig: '@amara.o', color: '#FF9500', lat: 6.5, lng: 3.4 },
-                        { name: 'Kenji T.', email: 'k@test.co', location: 'Tokyo, JP', ig: '@kenjit', color: '#FFD60A', lat: 35.7, lng: 139.7 },
-                        { name: 'Sofia R.', email: 's@test.co', location: 'São Paulo, BR', ig: '@sofia.r', color: '#30D158', lat: -23.5, lng: -46.6 },
-                        { name: 'Malik J.', email: 'm@test.co', location: 'Atlanta, GA', ig: '@mj_atl', color: '#00C7BE', lat: 33.7, lng: -84.4 },
-                        { name: 'Priya K.', email: 'p@test.co', location: 'London, UK', ig: '@priyak', color: '#0A84FF', lat: 51.5, lng: -0.1 },
-                        { name: 'Noah S.', email: 'n@test.co', location: 'Paris, FR', ig: '@noahs', color: '#BF5AF2', lat: 48.9, lng: 2.3 },
-                        { name: 'Aaliyah B.', email: 'ab@test.co', location: 'Chicago, IL', ig: '@aalb', color: '#FF3B30', lat: 41.9, lng: -87.6 },
-                        { name: 'Carlos V.', email: 'cv@test.co', location: 'Mexico City, MX', ig: '@carlosv', color: '#FF9500', lat: 19.4, lng: -99.1 },
-                        { name: 'Isla F.', email: 'if@test.co', location: 'Sydney, AU', ig: '@islaf', color: '#FFD60A', lat: -33.9, lng: 151.2 },
-                        { name: 'Dante W.', email: 'dw@test.co', location: 'Miami, FL', ig: '@dantew', color: '#30D158', lat: 25.8, lng: -80.2 },
-                        { name: 'Nia C.', email: 'nc@test.co', location: 'Toronto, CA', ig: '@niac', color: '#00C7BE', lat: 43.7, lng: -79.4 },
-                        { name: 'Remi A.', email: 'ra@test.co', location: 'Dubai, UAE', ig: '@remia', color: '#0A84FF', lat: 25.2, lng: 55.3 },
-                        { name: 'Zara H.', email: 'zh@test.co', location: 'Berlin, DE', ig: '@zarah', color: '#BF5AF2', lat: 52.5, lng: 13.4 },
-                        { name: 'Theo L.', email: 'tl@test.co', location: 'LA, CA', ig: '@theol', color: '#FF3B30', lat: 34.1, lng: -118.2 },
-                        { name: 'Grace E.', email: 'ge@test.co', location: 'Nairobi, KE', ig: '@gracee', color: '#FF9500', lat: -1.3, lng: 36.8 },
-                        { name: 'Marcus P.', email: 'mp@test.co', location: 'Seoul, KR', ig: '@mp_kr', color: '#FFD60A', lat: 37.6, lng: 126.9 },
-                        { name: 'Yara M.', email: 'ym@test.co', location: 'Cairo, EG', ig: '@yaram', color: '#30D158', lat: 30.0, lng: 31.2 },
-                        { name: 'Finn O.', email: 'fo@test.co', location: 'Amsterdam, NL', ig: '@finno', color: '#00C7BE', lat: 52.4, lng: 4.9 },
-                        { name: 'Sasha K.', email: 'sk@test.co', location: 'Moscow, RU', ig: '@sashak', color: '#0A84FF', lat: 55.8, lng: 37.6 }
-                    ];
+                    // ── Seed Entries (Dynamic Generation for 54 Nodes) ──
+                    const SEED_ENTRIES = (function() {
+                        const entries = [];
+                        const colors = ['#FF3B30', '#FF9500', '#FFD60A', '#30D158', '#00C7BE', '#0A84FF', '#BF5AF2'];
+                        const generateName = () => {
+                            const firsts = ['Jordan', 'Amara', 'Kenji', 'Sofia', 'Malik', 'Priya', 'Noah', 'Aaliyah', 'Carlos', 'Isla', 'Dante', 'Nia', 'Remi', 'Zara', 'Theo', 'Grace', 'Marcus', 'Yara', 'Finn', 'Sasha', 'Elijah', 'Chloe', 'Julian', 'Maya'];
+                            const lasts = ['M.', 'O.', 'T.', 'R.', 'J.', 'K.', 'S.', 'B.', 'V.', 'F.', 'W.', 'C.', 'A.', 'H.', 'L.', 'E.', 'P.', 'M.', 'O.', 'K.', 'D.', 'G.', 'N.', 'Y.'];
+                            return firsts[Math.floor(Math.random()*firsts.length)] + ' ' + lasts[Math.floor(Math.random()*lasts.length)];
+                        };
+                        const groups = [
+                            { name: 'New York, USA', count: 33, lat: 40.71, lng: -74.00, spread: 0.5 },
+                            { name: 'Los Angeles, USA', count: 8, lat: 34.05, lng: -118.24, spread: 0.8 },
+                            { name: 'Miami, USA', count: 5, lat: 25.76, lng: -80.19, spread: 0.2 },
+                            { name: 'Paris, France', count: 3, lat: 48.85, lng: 2.35, spread: 0.1 },
+                            { name: 'Rome, Italy', count: 3, lat: 41.90, lng: 12.49, spread: 2.0 },
+                            { name: 'Zurich, Switzerland', count: 2, lat: 47.37, lng: 8.54, spread: 0.5 },
+                        ];
+                        groups.forEach(g => {
+                            for(let i=0; i<g.count; i++) {
+                                entries.push({
+                                    name: generateName(),
+                                    email: 'guest@cire.co',
+                                    location: g.name,
+                                    ig: '@cire',
+                                    color: colors[Math.floor(Math.random() * colors.length)],
+                                    lat: g.lat + (Math.random() - 0.5) * g.spread,
+                                    lng: g.lng + (Math.random() - 0.5) * g.spread
+                                });
+                            }
+                        });
+                        return entries;
+                    })();
 
-                    // Seed to localStorage if not already done
-                    if (!localStorage.getItem('wwn_seeded')) {
+                    // Seed to localStorage if not already done (Using wwn_seeded_v4 to clear old nodes)
+                    if (!localStorage.getItem('wwn_seeded_v4')) {
                         localStorage.setItem('wwn_entries', JSON.stringify(SEED_ENTRIES));
-                        localStorage.setItem('wwn_seeded', '1');
+                        localStorage.setItem('wwn_seeded_v4', '1');
                     }
 
                     // ── Leaflet Map Init ───────────────────────────────────
@@ -2881,16 +2890,38 @@
     <script>
         // Data matching your existing structure
         const folderData = {
-            archive: {
-                label: 'CIRE',
+            'cire-canon': {
+                label: 'CIRE Canon',
                 files: [
+                    { name: 'the continuum', type: 'folder', targetFolder: 'canon-continuum' },
+                    { name: 'the charter', type: 'folder', targetFolder: 'canon-charter' },
+                    { name: 'the doctrine', type: 'folder', targetFolder: 'canon-doctrine' },
+                    { name: 'the access protocols', type: 'folder', targetFolder: 'canon-protocols' },
+                    { name: 'maison manifest', type: 'folder', targetFolder: 'maison' },
                     { name: 'blackscale logo.png', type: 'image', src: '/blackscale CIRE logo.png' },
                     { name: 'art house.png', type: 'image', src: '/art house.png' },
-                    { name: 'fashion house.png', type: 'image', src: '/fashion house.png' },
-                    { name: 'maison manifest', type: 'folder', targetFolder: 'maison' },
-                    { name: 'private services', type: 'folder', targetFolder: 'private-services' }
+                    { name: 'fashion house.png', type: 'image', src: '/fashion house.png' }
                 ]
             },
+            'cire-concierge': {
+                label: 'CIRE Concierge',
+                files: [
+                    { name: 'automotive', type: 'folder', targetFolder: 'concierge-automotive' },
+                    { name: 'maritime', type: 'folder', targetFolder: 'concierge-maritime' }
+                ]
+            },
+            'cire-hospitality': {
+                label: 'CIRE Hospitality',
+                files: [
+                    { name: 'coming soon.rfd', type: 'document', textContent: 'Exclusive access to our global hospitality network.' }
+                ]
+            },
+            'canon-continuum': { label: 'the continuum', files: [] },
+            'canon-charter': { label: 'the charter', files: [] },
+            'canon-doctrine': { label: 'the doctrine', files: [] },
+            'canon-protocols': { label: 'the access protocols', files: [] },
+            'concierge-automotive': { label: 'automotive', files: [] },
+            'concierge-maritime': { label: 'maritime', files: [] },
             'sophisticated-brilliance': {
                 label: 'Sophisticated Brilliance',
                 files: [
@@ -3036,13 +3067,13 @@
             }
         };
 
-        let selectedFolder = 'archive';
+        let selectedFolder = 'cire-canon';
         let currentView = 'columns';
         let selectedGalleryIndex = 0;
         let selectedColumnIndex = -1;
 
         // Navigation history for back/forward buttons
-        let navigationHistory = ['archive']; // Start with initial folder
+        let navigationHistory = ['cire-canon']; // Start with initial folder
         let historyIndex = 0; // Current position in history
 
         const desktop = document.getElementById('desktop');
@@ -3304,9 +3335,20 @@
             const selectedFile = selectedColumnIndex >= 0 ? files[selectedColumnIndex] : null;
             const selectedIcon = selectedFile ? getFileIcon(selectedFile.type) : null;
             const fileTypeLabel = selectedFile ? (selectedFile.type === 'image' ? 'PNG image' : selectedFile.type === 'video' ? 'MPEG-4 Video' : 'Document') : '';
+            
+            let isFileLocked = selectedFile && !isSystemUnlocked && isItemProtected(selectedFile.name);
 
             let previewContent = '';
-            if (selectedFile?.type === 'image' && selectedFile?.src) {
+            if (isFileLocked) {
+                previewContent = `
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111; padding: 20px; box-sizing: border-box; text-align: center; overflow: hidden; height: 100%;">
+                        <i class="fas fa-lock lock-icon" style="font-size: 32px; color: #636366; margin-bottom: 12px;"></i>
+                        <h2 style="font-size: 15px; font-weight: 500; margin-bottom: 6px; color: #fff;">This file is locked.</h2>
+                        <p style="font-size: 11px; color: #888; margin-bottom: 16px; max-width: 100%;">Enter password</p>
+                        <input type="password" placeholder="••••••••" onkeypress="checkSystemPassword(event)" style="background: transparent; border: 1px solid #3a3a3c; border-radius: 8px; padding: 6px 10px; width: 100%; max-width: 160px; color: white; outline: none; font-family: 'Courier New', monospace; text-align: center; font-size: 12px; box-sizing: border-box;">
+                    </div>
+                `;
+            } else if (selectedFile?.type === 'image' && selectedFile?.src) {
                 previewContent = `<img src="${selectedFile.src}" style="max-width: 100%; max-height: 100%; object-fit: contain; background: #1a1a1a;">`;
             } else if (selectedFile?.type === 'video' && selectedFile?.src) {
                 previewContent = `<video src="${selectedFile.src}" style="max-width: 100%; max-height: 100%; object-fit: contain;" autoplay muted loop playsinline></video>`;
@@ -3693,7 +3735,7 @@
 
         // Populate sidebar
         // Folders that are now nested inside other folders (not shown in sidebar)
-        const nestedFolders = ['video', 'maison', 'power', 'tom-sketches', 'tom-cads', 'tom-renderings', 'tom-wax', 'tom-final', 'si-foundations', 'si-fortifications', 'si-relics', 'si-dominion', 'si-adornments', 'si-crownworks', 'private-services'];
+        const nestedFolders = ['video', 'maison', 'power', 'tom-sketches', 'tom-cads', 'tom-renderings', 'tom-wax', 'tom-final', 'si-foundations', 'si-fortifications', 'si-relics', 'si-dominion', 'si-adornments', 'si-crownworks', 'private-services', 'canon-continuum', 'canon-charter', 'canon-doctrine', 'canon-protocols', 'concierge-automotive', 'concierge-maritime'];
 
         function populateSidebar() {
             sidebar.innerHTML = `
@@ -3844,7 +3886,7 @@
             return text;
         }
 
-        let isSystemUnlocked = false;
+        let isSystemUnlocked = true; // Temporarily disengaged per user request
 
         // Strict whitelist — ONLY these names can be accessed without a password
         // Folders: the key used in folderData (targetFolder value)
@@ -3856,6 +3898,9 @@
             'sophisticated-brilliance',  // sophisticatedBrilliance folder
             'sophisticated-ignorance',   // sophisticatedIgnorance folder
             'curated',           // curated content folder
+            'foundations',
+            'fortifications',
+            'crownworks'
         ]);
 
         const OPEN_FILES = new Set([
@@ -3864,16 +3909,20 @@
             'fashion house.png',
             'maison manifest',           // folder item (click navigates)
             'maison overview.rfd',
-            'sophisticated brilliance.rfd',   // in maison manifest
-            'sophisticated ignorance.rfd',    // in maison manifest
-            'coming soon.mp4',               // in maison manifest
+            'sophisticated brilliance.rfd',
+            'sophisticated ignorance.rfd',
+            'coming soon.mp4',
             'sophisticated brilliance',       // folder item (click navigates)
             'sophisticated ignorance',        // folder item (click navigates)
-            'teaser.mp4',                     // in sophisticated-brilliance
-            'collection 1 logo.mp4',          // in sophisticated-brilliance
-            'sophisticated brilliance.rfd',   // in sophisticated-brilliance
-            'sophisticated ignorance.rfd',    // in sophisticated-ignorance
-            'curated content',               // folder item (click opens popup)
+            'teaser.mp4',
+            'collection 1 logo.mp4',
+            'transcendence of man.rfd',
+            'collection.rfd',
+            'power perfected in position.rfd',
+            'curated content',               // folder item
+            'foundations',                   // folder item
+            'fortifications',                // folder item
+            'crownworks'                     // folder item
         ]);
 
         function isItemProtected(name) {
@@ -3916,6 +3965,11 @@
                         </div>
                     </div>
                 `;
+                return;
+            }
+
+            if (selectedFolder === 'concierge-automotive' || selectedFolder === 'concierge-maritime') {
+                renderProductGallery(selectedFolder, contentArea);
                 return;
             }
 
@@ -4308,7 +4362,7 @@
 
         // Open finder window
         function openFinderWindow(folderKey) {
-            selectedFolder = folderKey || 'archive';
+            selectedFolder = folderKey || 'cire-canon';
             finderWindow.classList.add('active');
 
             // Reset position to default to ensure it's visible
@@ -4363,7 +4417,7 @@
                 if (folder.dataset.folder) {
                     openFinderWindow(folder.dataset.folder);
                 } else if (folder.id === 'macintosh-hd') {
-                    openFinderWindow('archive');
+                    openFinderWindow('cire-canon');
                 }
             });
 
@@ -4555,19 +4609,28 @@
             const folderWidth = 100; // Width of desktop folder element
             const folderHeight = 100; // Approximate height including icon and label
             const margin = 20; // Safety margin from edges
+            
+            // Try to load saved positions
+            let savedPositions = {};
+            try {
+                const stored = localStorage.getItem('cire-folder-positions');
+                if (stored) {
+                    savedPositions = JSON.parse(stored);
+                }
+            } catch (e) {
+                console.error("Error loading folder positions", e);
+            }
 
-            // Define folder positions - left side folders use fixed positions
-            // Right side folder (Macintosh HD) uses viewport-relative positioning
+            // Define default folder positions
             const folderPositions = {
-
-                'archive': { left: 38, top: 27 }, // Moved additional 9px right (29+9)
-                'sophisticated-brilliance': { left: margin, top: 113 },
-                'sophisticated-ignorance': { left: margin + 118, top: 95 },
-                'coming-soon': { left: margin + 150, top: 204 },
-                'curated': { left: margin + 107, top: 332 },
+                'cire-canon': { left: Math.max(viewportWidth - folderWidth - margin, margin + 200), top: 127 },
+                'sophisticated-brilliance': { left: Math.max(viewportWidth - folderWidth - margin, margin + 200), top: 227 },
+                'sophisticated-ignorance': { left: Math.max(viewportWidth - folderWidth - margin, margin + 200), top: 327 },
+                'cire-concierge': { left: Math.max(viewportWidth - folderWidth - margin, margin + 200), top: 427 },
+                'cire-hospitality': { left: Math.max(viewportWidth - folderWidth - margin, margin + 200), top: 527 },
                 'macintosh-hd': {
                     left: Math.max(viewportWidth - folderWidth - margin, margin + 200),
-                    top: 331 // Moved additional 5px up (336-5)
+                    top: 27
                 }
             };
 
@@ -4577,10 +4640,19 @@
                     document.querySelector(`[data-folder="${folderId}"]`);
 
                 if (folder) {
-                    // Skip if manually moved
-                    if (folder.dataset.manuallyMoved === 'true') return;
-
-                    let { left, top } = folderPositions[folderId];
+                    // Skip if manually moved in this session but we don't have saved positions
+                    // However, we WANT to apply saved positions if they exist
+                    let left, top;
+                    
+                    if (savedPositions[folderId]) {
+                        left = savedPositions[folderId].left;
+                        top = savedPositions[folderId].top;
+                        folder.dataset.manuallyMoved = 'true';
+                    } else {
+                        if (folder.dataset.manuallyMoved === 'true') return;
+                        left = folderPositions[folderId].left;
+                        top = folderPositions[folderId].top;
+                    }
 
                     // Ensure folder stays within viewport bounds
                     left = Math.max(margin, Math.min(left, viewportWidth - folderWidth - margin));
@@ -4635,7 +4707,24 @@
             });
 
             document.addEventListener('mouseup', () => {
-                isDragging = false;
+                if (isDragging) {
+                    isDragging = false;
+                    // Save positions to localStorage
+                    try {
+                        const stored = localStorage.getItem('cire-folder-positions') || '{}';
+                        const savedPositions = JSON.parse(stored);
+                        const folderId = folder.id || folder.dataset.folder;
+                        if (folderId) {
+                            savedPositions[folderId] = {
+                                left: parseFloat(folder.style.left),
+                                top: parseFloat(folder.style.top)
+                            };
+                            localStorage.setItem('cire-folder-positions', JSON.stringify(savedPositions));
+                        }
+                    } catch(e) {
+                        console.error("Error saving position", e);
+                    }
+                }
             });
         }
 
@@ -4979,8 +5068,364 @@
                 }
             });
         });
-    </script>
-    <script type="module" src="/src/mount_banners.jsx"></script>
-</body>
+        // --- Automotive & Maritime Custom Gallery ---
+        async function renderProductGallery(folderKey, container) {
+            container.innerHTML = `<div style="padding: 20px; color: white; display:flex; justify-content:center; align-items:center; height:100%;">
+                <div class="loader" style="border: 2px solid #333; border-top: 2px solid #fff; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite;"></div>
+            </div>`;
+            try {
+                const res = await fetch('/src/blustreet_data.json');
+                const data = await res.json();
+                const category = folderKey === 'concierge-automotive' ? 'automotive' : 'maritime';
+                const filtered = data.filter(d => d.category === category);
+                
+                let html = `<div class="product-gallery" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; padding: 24px; overflow-y: auto; height: 100%; box-sizing: border-box;">`;
+                filtered.forEach((item, index) => {
+                    const imgSrc = item.local_image || item.image;
+                    html += `
+                        <div class="product-card" onclick="openProductDetail(${index}, '${category}')" style="background: rgba(28, 28, 30, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; cursor: pointer; transition: transform 0.2s, background 0.2s; display: flex; flex-direction: column; align-items: center; text-align: center;">
+                            <img src="${imgSrc}" style="width: 100%; height: 130px; object-fit: contain; margin-bottom: 20px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));">
+                            <h3 style="color: #fff; font-size: 15px; font-weight: 500; margin: 0 0 8px 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">${item.name}</h3>
+                            
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                container.innerHTML = html;
+                
+                window.currentShowroomData = filtered;
+            } catch (e) {
+                console.error(e);
+                container.innerHTML = `<div style="padding: 20px; color: #ff453a; text-align: center; font-family: -apple-system, sans-serif;">Failed to load fleet data.<br>Please ensure the data file exists.</div>`;
+            }
+        }
 
+        let isOpeningModal = false;
+        function openProductDetail(index, category) {
+            if (isOpeningModal) return;
+            isOpeningModal = true;
+            
+            try {
+                const modal = document.getElementById('product-detail-modal');
+                if (modal && modal.style.display === 'flex') return;
+                const item = window.currentShowroomData[index];
+                const imgSrc = item.local_image || item.image;
+                
+                document.getElementById('pd-image').src = imgSrc;
+                document.getElementById('pd-title').innerText = item.name;
+                document.getElementById('pd-desc').innerText = item.description || 'Description not available.';
+                
+                // Vehicle Information
+                const infoContainer = document.getElementById('pd-info');
+                infoContainer.innerHTML = '';
+                if (item.requirements && item.requirements.vehicle_info) {
+                    for (const [key, value] of Object.entries(item.requirements.vehicle_info)) {
+                        infoContainer.innerHTML += `<li><strong>${key}:</strong> ${value}</li>`;
+                    }
+                } else {
+                    infoContainer.innerHTML = '<li>N/A</li>';
+                }
+
+                // Performance
+                const perfContainer = document.getElementById('pd-perf');
+                perfContainer.innerHTML = '';
+                if (item.performance) {
+                    for (const [key, value] of Object.entries(item.performance)) {
+                        perfContainer.innerHTML += `<li><strong>${key}:</strong> ${value}</li>`;
+                    }
+                } else {
+                    perfContainer.innerHTML = '<li>N/A</li>';
+                }
+
+                // Requirements
+                const reqContainer = document.getElementById('pd-req');
+                reqContainer.innerHTML = '';
+                if (item.requirements && item.requirements.rental_requirements && item.requirements.rental_requirements.length > 0) {
+                    item.requirements.rental_requirements.forEach(req => {
+                        reqContainer.innerHTML += `<li>${req}</li>`;
+                    });
+                } else {
+                    reqContainer.innerHTML = `
+                        <li>Must be 25 years or older</li>
+                        <li>Valid US or International Drivers License</li>
+                        <li>Full Coverage Auto Insurance</li>
+                        <li>Refundable Security Deposit Required</li>
+                    `;
+                }
+                
+                // Prefill inquiry form
+                document.getElementById('inq-model').value = item.name;
+                document.getElementById('inq-category').value = category === 'automotive' ? 'Exotic Vehicle' : 'Yacht';
+                
+                modal.style.display = 'flex';
+                setTimeout(() => modal.classList.add('visible'), 10);
+            } catch (e) {
+                console.error(e);
+            } finally {
+                setTimeout(() => isOpeningModal = false, 300);
+            }
+        }
+
+        function closeProductDetail() {
+            const modal = document.getElementById('product-detail-modal');
+            modal.classList.remove('visible');
+            setTimeout(() => modal.style.display = 'none', 300);
+        }
+
+        function openInquiryForm() {
+            document.getElementById('product-detail-modal').style.display = 'none';
+            const modal = document.getElementById('inquiry-form-modal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('visible'), 10);
+        }
+
+        function closeInquiryForm() {
+            const modal = document.getElementById('inquiry-form-modal');
+            modal.classList.remove('visible');
+            setTimeout(() => modal.style.display = 'none', 300);
+        }
+
+        function submitInquiry(e) {
+            e.preventDefault();
+            const btn = document.getElementById('inq-submit-btn');
+            const originalText = btn.innerText;
+            btn.innerText = 'Submitting...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerText = 'Request Sent';
+                btn.style.background = '#32d74b';
+                setTimeout(() => {
+                    closeInquiryForm();
+                    btn.innerText = originalText;
+                    btn.style.background = '#fff';
+                    btn.disabled = false;
+                    document.getElementById('cire-inquiry-form').reset();
+                }, 2000);
+            }, 1500);
+        }
+
+    </script>
+    <!-- Product Detail Modal -->
+    <div id="product-detail-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); z-index: 10000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
+        <div style="background: #1c1c1e; width: 90%; max-width: 800px; max-height: 90vh; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); overflow: hidden; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
+                <h2 id="pd-title" style="margin: 0; color: white; font-size: 20px; font-weight: 600;">Vehicle Name</h2>
+                <button onclick="closeProductDetail()" style="background: none; border: none; color: #8e8e93; font-size: 24px; cursor: pointer;">&times;</button>
+            </div>
+            <div style="padding: 40px; display: flex; flex-direction: column; align-items: center; overflow-y: auto;">
+                <img id="pd-image" src="" style="width: 100%; max-width: 500px; height: auto; object-fit: contain; margin-bottom: 40px; filter: drop-shadow(0 20px 20px rgba(0,0,0,0.5));">
+                <div style="width: 100%; display: flex; justify-content: space-between; align-items: flex-start; gap: 40px;">
+                    <div style="flex: 1;">
+                        <h3 style="color: #8e8e93; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 10px 0;">Description</h3>
+                        <p id="pd-desc" style="color: #d1d1d6; font-size: 15px; line-height: 1.6; margin: 0 0 30px 0;">Description goes here.</p>
+                        
+                        <h3 style="color: #8e8e93; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 10px 0;">Performance</h3>
+                        <ul id="pd-perf" style="color: #d1d1d6; font-size: 14px; line-height: 1.8; margin: 0 0 30px 0; padding-left: 20px;">
+                        </ul>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 24px;">
+                        <div style="background: rgba(255,255,255,0.03); border-radius: 16px; padding: 24px;">
+                            <h3 style="color: white; font-size: 16px; margin: 0 0 20px 0; font-weight: 500;">Vehicle Information</h3>
+                            <ul id="pd-info" style="color: #d1d1d6; font-size: 14px; line-height: 1.8; margin: 0; padding-left: 20px; list-style-type: none;">
+                            </ul>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.03); border-radius: 16px; padding: 24px;">
+                            <h3 style="color: white; font-size: 16px; margin: 0 0 20px 0; font-weight: 500;">Requirements</h3>
+                            <ul id="pd-req" style="color: #d1d1d6; font-size: 14px; line-height: 1.8; margin: 0; padding-left: 20px;">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: flex-end; background: #151516;">
+                <button onclick="openInquiryForm()" style="background: white; color: black; border: none; padding: 14px 32px; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; font-family: inherit;">Request Access</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inquiry Form Modal -->
+    <div id="inquiry-form-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); z-index: 10001; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;">
+        <div style="background: rgba(20, 20, 22, 0.85); backdrop-filter: blur(40px); width: 90%; max-width: 640px; max-height: 90vh; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.8); overflow: hidden; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.08);">
+            <div style="padding: 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="margin: 0; color: white; font-size: 16px; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase;">Private Inquiry</h2>
+                <button onclick="closeInquiryForm()" style="background: none; border: none; color: rgba(255,255,255,0.5); font-size: 28px; font-weight: 100; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">&times;</button>
+            </div>
+            <div style="padding: 24px; overflow-y: auto; flex: 1;">
+                <form id="cire-inquiry-form" onsubmit="submitInquiry(event)">
+                    <style>
+                        #cire-inquiry-form label { display: block; color: rgba(255,255,255,0.5); font-size: 10px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 24px; font-weight: 400; }
+                        #cire-inquiry-form label:first-child { margin-top: 0; }
+                        #cire-inquiry-form input[type="text"], #cire-inquiry-form input[type="email"], #cire-inquiry-form input[type="tel"], #cire-inquiry-form input[type="date"], #cire-inquiry-form input[type="time"], #cire-inquiry-form select { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); color: white; padding: 8px 0; border-radius: 0; font-size: 14px; font-weight: 300; box-sizing: border-box; font-family: inherit; outline: none; transition: border-color 0.3s; }
+                        #cire-inquiry-form input:focus, #cire-inquiry-form select:focus { border-color: rgba(255,255,255,0.8); }
+                        #cire-inquiry-form input::placeholder { color: rgba(255,255,255,0.2); font-weight: 300; }
+                        .form-row { display: flex; gap: 24px; }
+                        .form-col { flex: 1; }
+                        .checkbox-group { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; }
+                        .checkbox-item { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 300; width: calc(50% - 8px); cursor: pointer; }
+                        .checkbox-item input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; min-width: 16px; border: 1px solid rgba(255,255,255,0.3); border-radius: 2px; background: transparent; cursor: pointer; transition: all 0.2s; position: relative; margin: 0; padding: 0; }
+                        .checkbox-item input[type="checkbox"]:checked { background: #fff; border-color: #fff; }
+                        .checkbox-item input[type="checkbox"]:checked::after { content: ''; position: absolute; left: 4px; top: 1px; width: 4px; height: 8px; border: solid black; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+                        .form-section-title { color: white; font-size: 12px; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; margin: 40px 0 24px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; }
+                    </style>
+                    
+                    <h3 class="form-section-title" style="margin-top: 0;">Client Details</h3>
+                    <div class="form-row">
+                        <div class="form-col"><label>Full Name</label><input type="text" required></div>
+                        <div class="form-col"><label>Email</label><input type="email" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col"><label>Phone</label><input type="tel" required></div>
+                        <div class="form-col"><label>Company / Affiliation</label><input type="text" placeholder="(Optional)"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col"><label>Instagram</label><input type="text" placeholder="(Optional)"></div>
+                        <div class="form-col"><label>Referral Source</label><input type="text"></div>
+                    </div>
+
+                    <h3 class="form-section-title">Experience & Vehicle</h3>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label>Experience Type</label>
+                            <select required>
+                                <option value="">Select...</option>
+                                <option>Private Arrival</option>
+                                <option>Weekend Rental</option>
+                                <option>Photoshoot</option>
+                                <option>Music Video</option>
+                                <option>Wedding</option>
+                                <option>Corporate Event</option>
+                                <option>Real Estate Showing</option>
+                                <option>Brand Activation</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-col">
+                            <label>Vehicle Category</label>
+                            <input type="text" id="inq-category" readonly style="background: #1c1c1e; color: #8e8e93;">
+                        </div>
+                    </div>
+                    <label>Specific Model Desired</label>
+                    <input type="text" id="inq-model" readonly style="background: #1c1c1e; color: #8e8e93; margin-bottom: 16px;">
+                    
+                    <div class="form-row">
+                        <div class="form-col"><label>Color Preference</label><input type="text"></div>
+                        <div class="form-col"><label>Number of Vehicles</label><select><option>1</option><option>2</option><option>3+</option></select></div>
+                        <div class="form-col"><label>Budget Range</label><input type="text"></div>
+                    </div>
+
+                    <h3 class="form-section-title">Timing & Location</h3>
+                    <div class="form-row">
+                        <div class="form-col"><label>Desired Date</label><input type="date" required></div>
+                        <div class="form-col"><label>Start Time</label><input type="time" required></div>
+                        <div class="form-col"><label>End Time</label><input type="time"></div>
+                    </div>
+                    <label style="display:flex; align-items:center; gap:8px; margin-top:16px; color:#d1d1d6; text-transform:none;"><input type="checkbox"> My timing is flexible</label>
+                    <label style="display:flex; align-items:center; gap:8px; margin-top:8px; color:#d1d1d6; text-transform:none;"><input type="checkbox"> 24-hour rental or event window</label>
+                    
+                    <div class="form-row" style="margin-top:24px;">
+                        <div class="form-col"><label>Delivery Address</label><input type="text"></div>
+                        <div class="form-col"><label>Pickup/Drop-off</label><input type="text"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col"><label>Travel Area</label><input type="text"></div>
+                        <div class="form-col"><label>Out-of-state Plans?</label><input type="text"></div>
+                    </div>
+
+                    <h3 class="form-section-title">Driver Eligibility</h3>
+                    <div class="form-row">
+                        <div class="form-col"><label>Driver Age</label><input type="text" required></div>
+                        <div class="form-col">
+                            <label>License Type</label>
+                            <select required><option>US License</option><option>International License</option></select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label>Full Coverage Insurance</label>
+                            <select required><option>Yes</option><option>No</option></select>
+                        </div>
+                        <div class="form-col"><label>Insurance State</label><input type="text"></div>
+                    </div>
+                    <label>Additional Drivers?</label><input type="text" placeholder="Names and ages (if any)">
+
+                    <h3 class="form-section-title">Concierge Add-ons</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="checkbox"> Chauffeur Request</label>
+                        <label class="checkbox-item"><input type="checkbox"> Photographer / Videographer</label>
+                        <label class="checkbox-item"><input type="checkbox"> Security</label>
+                        <label class="checkbox-item"><input type="checkbox"> Hotel Pickup</label>
+                        <label class="checkbox-item"><input type="checkbox"> Event Coordination</label>
+                        <label class="checkbox-item"><input type="checkbox"> Multiple-Car Arrival</label>
+                        <label class="checkbox-item"><input type="checkbox"> Yacht Pairing</label>
+                        <label class="checkbox-item"><input type="checkbox" style="width: 20px;"> Private Dinner / Nightlife Access</label>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; margin-top: 32px;">
+                        <label class="checkbox-item" style="width: 100%; align-items: flex-start; color: #8e8e93; font-size: 12px; line-height: 1.5; text-transform:none; letter-spacing:0;">
+                            <input type="checkbox" required style="margin-top: 2px;">
+                            I understand CIRE Concierge is an arranging party and that all rentals are subject to partner approval, insurance verification, deposit requirements, and final rental agreement.
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div style="padding: 24px 32px; border-top: 1px solid rgba(255,255,255,0.05); text-align: right;">
+                <button type="submit" form="cire-inquiry-form" id="inq-submit-btn" style="background: white; color: black; border: none; padding: 12px 36px; border-radius: 4px; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.3s; font-family: inherit;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.8)'" onmouseout="this.style.backgroundColor='white'">Submit Inquiry</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/mount_banners.jsx"></script>
+    </div>
+
+    <!-- Screenshot / Screen Recording Deterrent -->
+    <style>
+        .screenshot-deterrent-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            color: #111;
+            z-index: 9999999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-family: monospace;
+            font-size: 24px;
+            pointer-events: all;
+        }
+        body {
+            -webkit-user-select: none;
+            user-select: none;
+        }
+    </style>
+    <div id="deterrent-overlay" class="screenshot-deterrent-overlay">
+        PROTECTED CONTENT
+    </div>
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        
+        const overlay = document.getElementById('deterrent-overlay');
+        
+        window.addEventListener('blur', () => {
+            overlay.style.display = 'flex';
+        });
+        
+        window.addEventListener('focus', () => {
+            overlay.style.display = 'none';
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'PrintScreen' || 
+               (e.metaKey && e.shiftKey && (e.key === '3' || e.key === '4' || e.key === '5'))) {
+                overlay.style.display = 'flex';
+                setTimeout(() => {
+                    if(document.hasFocus()) overlay.style.display = 'none';
+                }, 2000);
+            }
+        });
+    </script>
+</body>
 </html>
