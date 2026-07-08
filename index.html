@@ -3204,13 +3204,13 @@ const PERMANENT_NODES = [
 
         if (window.BLUSTREET_DATA) {
             folderData['concierge-automotive'].files = window.BLUSTREET_DATA.filter(d => d.category === 'automotive').map(d => ({
-                name: d.name + '.png',
+                name: d.name,
                 type: 'image',
                 src: d.image,
                 tags: d.requirements || []
             }));
             folderData['concierge-maritime'].files = window.BLUSTREET_DATA.filter(d => d.category === 'maritime').map(d => ({
-                name: d.name + '.png',
+                name: d.name,
                 type: 'image',
                 src: d.image,
                 tags: d.requirements || []
@@ -4074,10 +4074,15 @@ const PERMANENT_NODES = [
 
         function isItemProtected(name) {
             if (isSystemUnlocked) return false;
-            // Check if it's an open folder key
-            if (OPEN_FOLDERS.has(name)) return false;
+            // Check if it's an open folder key (or spaced display name)
+            if (OPEN_FOLDERS.has(name) || OPEN_FOLDERS.has(name.replace(' ', '-'))) return false;
             // Check if it's an open file name
             if (OPEN_FILES.has(name)) return false;
+
+            // Check if it's an automotive or maritime listing
+            if (folderData['concierge-automotive']?.files?.some(f => f.name === name)) return false;
+            if (folderData['concierge-maritime']?.files?.some(f => f.name === name)) return false;
+
             return true;
         }
 
@@ -4111,7 +4116,7 @@ const PERMANENT_NODES = [
                 } else if (currentView === 'gallery') {
                     contentArea.innerHTML = `
                         <div class="gallery-view" style="display: flex; flex-direction: column; height: 100%;">
-                            <div class="gallery-main" style="display: flex; flex: 1; min-height: 0;">
+                            <div class="gallery-main" style="display: flex; flex: 1; min-height: 0; margin-bottom: 0;">
                                 <div class="gallery-preview-area" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111;">
                                     <i class="fas fa-lock lock-icon" style="font-size: 48px; color: #636366; margin-bottom: 16px;"></i>
                                     <h2 style="font-size: 18px; font-weight: 500; margin-bottom: 8px; color: #fff;">This folder is locked.</h2>
@@ -4120,7 +4125,6 @@ const PERMANENT_NODES = [
                                 </div>
 
                             </div>
-                            <div class="gallery-thumbnails" style="height: 100px; background: #1a1a1a; border-top: 1px solid #111;"></div>
                         </div>
                     `;
                 } else {
