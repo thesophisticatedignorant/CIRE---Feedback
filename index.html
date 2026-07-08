@@ -4808,13 +4808,13 @@ ${isFileLocked ? '' : `
 
             // Define folder positions adaptively based on screenshots
             const folderPositions = {
-                // Left Side (moved down 10px)
-                'macintosh-hd': { left: leftFoldersX, top: 230 },
-                'inquiry': { left: leftFoldersX, top: 350 }
+                // Left Side (moved up 40px net)
+                'macintosh-hd': { left: leftFoldersX, top: 190 },
+                'inquiry': { left: leftFoldersX, top: 310 }
             };
             
             // Calculate right folder positions dynamically to ensure exactly 30px vertical gap
-            let currentTop = 95; 
+            let currentTop = 120; // Lowered by 25px
             const rightFolderIds = [
                 'sophisticated-ignorance',
                 'sophisticated-brilliance',
@@ -5149,11 +5149,12 @@ ${isFileLocked ? '' : `
                         if (popup.dataset.preRevealLeft) {
                             popup.style.left = popup.dataset.preRevealLeft;
                             popup.style.top = popup.dataset.preRevealTop;
-                            delete popup.dataset.preRevealLeft;
                             delete popup.dataset.preRevealTop;
-                        } else {
-                            const pWidth = popup.offsetWidth || parseInt(window.getComputedStyle(popup).width) || 550;
-                            popup.style.left = Math.max(0, (window.innerWidth - pWidth) / 2) + 'px';
+                        }
+                        
+                        // Always explicitly recenter
+                        const pWidth = popup.offsetWidth || parseInt(window.getComputedStyle(popup).width) || 550;
+                        popup.style.left = Math.max(0, (window.innerWidth - pWidth) / 2) + 'px';
                             if (popup.id === 'popup-restricted') {
                                 const pHeight = popup.offsetHeight || 150;
                                 popup.style.top = Math.max(0, (window.innerHeight - pHeight) / 2) + 'px';
