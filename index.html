@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/blustreet_data.js"></script>
     <style>
         .wwn-tooltip {
             background: #000 !important;
@@ -2888,7 +2889,7 @@ const PERMANENT_NODES = [
         </div>
 
         <!-- Restricted Access Window -->
-        <div class="popup-window" id="popup-restricted" style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; background: rgba(30,30,30,0.95); backdrop-filter: blur(10px); border-radius: 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); z-index: 9999;">
+        <div class="popup-window" id="popup-restricted" style="width: 350px; background: rgba(30,30,30,0.95); backdrop-filter: blur(10px); border-radius: 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); z-index: 9999;">
             <div class="popup-titlebar" style="border-bottom: none;">
                 <div class="popup-controls">
                     <div class="popup-control close" onclick="closePopup('popup-restricted')"></div>
@@ -3201,6 +3202,21 @@ const PERMANENT_NODES = [
             }
         };
 
+        if (window.BLUSTREET_DATA) {
+            folderData['concierge-automotive'].files = window.BLUSTREET_DATA.filter(d => d.category === 'automotive').map(d => ({
+                name: d.name + '.png',
+                type: 'image',
+                src: d.image,
+                tags: d.requirements || []
+            }));
+            folderData['concierge-maritime'].files = window.BLUSTREET_DATA.filter(d => d.category === 'maritime').map(d => ({
+                name: d.name + '.png',
+                type: 'image',
+                src: d.image,
+                tags: d.requirements || []
+            }));
+        }
+
         let selectedFolder = 'cire-canon';
         let currentView = 'columns';
         let selectedGalleryIndex = 0;
@@ -3304,6 +3320,18 @@ const PERMANENT_NODES = [
 
                 // Show popup
                 popup.classList.add('active');
+
+                // Center popup
+                const popupWidth = popup.offsetWidth || parseInt(window.getComputedStyle(popup).width) || 550;
+                popup.style.left = Math.max(0, (window.innerWidth - popupWidth) / 2) + 'px';
+                
+                if (popupId === 'popup-restricted') {
+                    const popupHeight = popup.offsetHeight || 150;
+                    popup.style.top = Math.max(0, (window.innerHeight - popupHeight) / 2) + 'px';
+                    popup.style.transform = 'none'; // Clear any transform
+                } else {
+                    popup.style.top = '100px';
+                }
 
                 // Bring to front
                 highestZIndex++;
@@ -3585,6 +3613,10 @@ const PERMANENT_NODES = [
             // RFD Document triggers
             if (fileName === 'maison overview.rfd') {
                 openPopup('popup-maison');
+                return;
+            }
+            if (fileName === 'private inquiry.rfd') {
+                openPopup('popup-inquiry');
                 return;
             }
             if (fileName === 'sophisticated brilliance.rfd') {
@@ -4024,7 +4056,11 @@ const PERMANENT_NODES = [
         const OPEN_FOLDERS = new Set([
             'archive',           // Root CIRE folder
             'macintosh-hd',      // Root nav
-            'cire-concierge'
+            'cire-concierge',
+            'concierge-automotive',
+            'concierge-maritime',
+            'automotive',
+            'maritime'
         ]);
 
         const OPEN_FILES = new Set([
@@ -4063,24 +4099,46 @@ const PERMANENT_NODES = [
         // Populate content based on view
         function populateContent() {
             if (!isSystemUnlocked && isItemProtected(selectedFolder)) {
-                contentArea.innerHTML = `
-                    <div class="column-view" style="height: 100%; display: flex; width: 100%; box-sizing: border-box; overflow: hidden;">
-                        <div class="column" style="width: 200px; min-width: 200px; border-right: 1px solid #1a1a1a; background: #222; box-sizing: border-box;">
-                            <!-- Left column intentionally left blank for lock screen -->
+                if (currentView === 'icons') {
+                    contentArea.innerHTML = `
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111; height: 100%; box-sizing: border-box; text-align: center;">
+                            <i class="fas fa-lock lock-icon" style="font-size: 40px; color: #636366; margin-bottom: 16px;"></i>
+                            <h2 style="font-size: 16px; font-weight: 500; margin-bottom: 8px; color: #fff;">This folder is locked.</h2>
+                            <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Enter password to unlock</p>
+                            <input type="password" placeholder="••••••••" onkeypress="checkSystemPassword(event)" style="background: rgba(255,255,255,0.05); border: 1px solid #3a3a3c; border-radius: 8px; padding: 8px 12px; width: 100%; max-width: 180px; color: white; outline: none; font-family: 'Courier New', monospace; text-align: center; font-size: 14px;">
                         </div>
-                        <div class="column-preview" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111; padding: 20px; box-sizing: border-box; text-align: center; overflow: hidden;">
-                            <i class="fas fa-lock lock-icon" style="font-size: 32px; color: #636366; margin-bottom: 12px;"></i>
-                            <h2 style="font-size: 15px; font-weight: 500; margin-bottom: 6px; color: #fff;">This file is locked.</h2>
-                            <p style="font-size: 11px; color: #888; margin-bottom: 16px; max-width: 100%;">Enter password</p>
-                            <input type="password" placeholder="••••••••" onkeypress="checkSystemPassword(event)" style="background: transparent; border: 1px solid #3a3a3c; border-radius: 8px; padding: 6px 10px; width: 100%; max-width: 160px; color: white; outline: none; font-family: 'Courier New', monospace; text-align: center; font-size: 12px; box-sizing: border-box;">
-                        </div>
-                    </div>
-                `;
-                return;
-            }
+                    `;
+                } else if (currentView === 'gallery') {
+                    contentArea.innerHTML = `
+                        <div class="gallery-view" style="display: flex; flex-direction: column; height: 100%;">
+                            <div class="gallery-main" style="display: flex; flex: 1; min-height: 0;">
+                                <div class="gallery-preview-area" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111;">
+                                    <i class="fas fa-lock lock-icon" style="font-size: 48px; color: #636366; margin-bottom: 16px;"></i>
+                                    <h2 style="font-size: 18px; font-weight: 500; margin-bottom: 8px; color: #fff;">This folder is locked.</h2>
+                                    <p style="font-size: 13px; color: #888; margin-bottom: 24px;">Enter password to unlock</p>
+                                    <input type="password" placeholder="••••••••" onkeypress="checkSystemPassword(event)" style="background: rgba(255,255,255,0.05); border: 1px solid #3a3a3c; border-radius: 8px; padding: 10px 14px; width: 100%; max-width: 200px; color: white; outline: none; font-family: 'Courier New', monospace; text-align: center; font-size: 14px;">
+                                </div>
 
-            if (selectedFolder === 'concierge-automotive' || selectedFolder === 'concierge-maritime') {
-                renderProductGallery(selectedFolder, contentArea);
+                            </div>
+                            <div class="gallery-thumbnails" style="height: 100px; background: #1a1a1a; border-top: 1px solid #111;"></div>
+                        </div>
+                    `;
+                } else {
+                    // List and Columns
+                    contentArea.innerHTML = `
+                        <div class="column-view" style="height: 100%; display: flex; width: 100%; box-sizing: border-box; overflow: hidden;">
+                            <div class="column" style="width: 200px; min-width: 200px; border-right: 1px solid #1a1a1a; background: #222; box-sizing: border-box;">
+                                <!-- Left column intentionally left blank for lock screen -->
+                            </div>
+                            <div class="column-preview" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111; padding: 20px; box-sizing: border-box; text-align: center; overflow: hidden;">
+                                <i class="fas fa-lock lock-icon" style="font-size: 32px; color: #636366; margin-bottom: 12px;"></i>
+                                <h2 style="font-size: 15px; font-weight: 500; margin-bottom: 6px; color: #fff;">This file is locked.</h2>
+                                <p style="font-size: 11px; color: #888; margin-bottom: 16px; max-width: 100%;">Enter password</p>
+                                <input type="password" placeholder="••••••••" onkeypress="checkSystemPassword(event)" style="background: transparent; border: 1px solid #3a3a3c; border-radius: 8px; padding: 6px 10px; width: 100%; max-width: 160px; color: white; outline: none; font-family: 'Courier New', monospace; text-align: center; font-size: 12px; box-sizing: border-box;">
+                            </div>
+                        </div>
+                    `;
+                }
                 return;
             }
 
@@ -4344,6 +4402,7 @@ const PERMANENT_NODES = [
                                     ${previewContent}
                                 </div>
                             </div>
+${isFileLocked ? '' : `
                             <div class="gallery-info">
                                 <div class="gallery-info-header">
                                     <i class="${icon.class}" style="color: ${icon.color}"></i>
@@ -4385,6 +4444,7 @@ const PERMANENT_NODES = [
                                     </div>
                                 </div>
                             </div>
+`}
                         </div>
                         <div class="gallery-thumbnails" id="gallery-thumbnails"></div>
                     </div>
@@ -4481,8 +4541,8 @@ const PERMANENT_NODES = [
             selectedFolder = folderKey || 'cire-canon';
             finderWindow.classList.add('active');
 
-            // Reset position to default to ensure it's visible
-            const startLeft = 150;
+            // Reset position to center to ensure it's always centered when opened
+            const startLeft = Math.max(0, (window.innerWidth - 700) / 2);
             const startTop = 100;
             const centerX = window.innerWidth / 2;
 
@@ -4744,13 +4804,13 @@ const PERMANENT_NODES = [
 
             // Define folder positions adaptively based on screenshots
             const folderPositions = {
-                // Left Side (moved up 40px)
-                'macintosh-hd': { left: leftFoldersX, top: 260 },
-                'inquiry': { left: leftFoldersX, top: 380 }
+                // Left Side (moved down 10px)
+                'macintosh-hd': { left: leftFoldersX, top: 230 },
+                'inquiry': { left: leftFoldersX, top: 350 }
             };
             
             // Calculate right folder positions dynamically to ensure exactly 30px vertical gap
-            let currentTop = 70; // Started at 60, moved down 10px
+            let currentTop = 95; 
             const rightFolderIds = [
                 'sophisticated-ignorance',
                 'sophisticated-brilliance',
@@ -5082,17 +5142,31 @@ const PERMANENT_NODES = [
                     desktopRevealed = false;
                     allPopups.forEach(popup => {
                         popup.style.transition = 'left 0.4s ease, top 0.4s ease';
-                        popup.style.removeProperty('left');
-                        popup.style.removeProperty('top');
                         if (popup.dataset.preRevealLeft) {
                             popup.style.left = popup.dataset.preRevealLeft;
                             popup.style.top = popup.dataset.preRevealTop;
+                            delete popup.dataset.preRevealLeft;
+                            delete popup.dataset.preRevealTop;
+                        } else {
+                            const pWidth = popup.offsetWidth || parseInt(window.getComputedStyle(popup).width) || 550;
+                            popup.style.left = Math.max(0, (window.innerWidth - pWidth) / 2) + 'px';
+                            if (popup.id === 'popup-restricted') {
+                                const pHeight = popup.offsetHeight || 150;
+                                popup.style.top = Math.max(0, (window.innerHeight - pHeight) / 2) + 'px';
+                            } else {
+                                popup.style.top = '100px';
+                            }
                         }
                     });
                     if (finderWin) {
                         if (finderWin.dataset.preRevealLeft) {
                             finderWin.style.left = finderWin.dataset.preRevealLeft;
                             finderWin.style.top = finderWin.dataset.preRevealTop;
+                            delete finderWin.dataset.preRevealLeft;
+                            delete finderWin.dataset.preRevealTop;
+                        } else if (finderWin.style.display !== 'none') {
+                            finderWin.style.left = Math.max(0, (window.innerWidth - 700) / 2) + 'px';
+                            finderWin.style.top = '100px';
                         }
                     }
                     setTimeout(() => {
