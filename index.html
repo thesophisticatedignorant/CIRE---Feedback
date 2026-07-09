@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="/blustreet_data.js"></script>
+    <script type="module" src="/firebase_setup.js"></script>
     <style>
         .wwn-tooltip {
             background: #000 !important;
@@ -2314,20 +2315,39 @@ const PERMANENT_NODES = [
                         btn.textContent = 'SUBMITTING...';
                         errMsg.style.display = 'none';
 
-                        // Save to localStorage
+                        // Save to localStorage (fallback)
                         const entries = JSON.parse(localStorage.getItem('wwn_entries') || '[]');
                         const newEntry = { name, email, location, ig, color, lat: null, lng: null, ts: Date.now() };
                         entries.push(newEntry);
                         localStorage.setItem('wwn_entries', JSON.stringify(entries));
 
-                        // Attempt real backend (noop on failure)
+                        // Attempt to fetch IP and Location
+                        let locationData = {};
                         try {
-                            await fetch('http://localhost:3001/api/guestbook', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ name, email, location, ig, color })
-                            });
-                        } catch (_) {}
+                            const ipRes = await fetch('http://ip-api.com/json/');
+                            if (ipRes.ok) {
+                                locationData = await ipRes.json();
+                            }
+                        } catch (err) {
+                            console.error("IP API Error", err);
+                        }
+
+                        // Add to Firebase Firestore
+                        if (window.firebaseDB && window.firebaseAddDoc && window.firebaseCollection) {
+                            try {
+                                await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, "newsletter_subscribers"), {
+                                    name,
+                                    email,
+                                    location_input: location,
+                                    instagram: ig,
+                                    color_preference: color,
+                                    locationData: locationData,
+                                    timestamp: window.firebaseServerTimestamp()
+                                });
+                            } catch (fbErr) {
+                                console.error("Firebase Error: ", fbErr);
+                            }
+                        }
 
                         e.target.style.display = 'none';
                         succMsg.style.display = 'flex';
@@ -5415,12 +5435,52 @@ ${isFileLocked ? '' : `
             setTimeout(() => modal.style.display = 'none', 300);
         }
 
-        function submitInquiry(e) {
+        async function submitInquiry(e) {
             e.preventDefault();
             const btn = document.getElementById('inq-submit-btn');
             const originalText = btn.innerText;
             btn.innerText = 'Submitting...';
             btn.disabled = true;
+
+            const name = document.getElementById('inq-name').value;
+            const email = document.getElementById('inq-email').value;
+            const phone = document.getElementById('inq-phone').value;
+            const timeline = document.getElementById('inq-timeline').value;
+            const budget = document.getElementById('inq-budget').value;
+            const details = document.getElementById('inq-details').value;
+            const model = document.getElementById('inq-model').value;
+            const category = document.getElementById('inq-category').value;
+            
+            // Attempt to fetch IP and Location
+            let locationData = {};
+            try {
+                const ipRes = await fetch('http://ip-api.com/json/');
+                if (ipRes.ok) {
+                    locationData = await ipRes.json();
+                }
+            } catch (err) {
+                console.error("IP API Error", err);
+            }
+
+            // Add to Firebase Firestore
+            if (window.firebaseDB && window.firebaseAddDoc && window.firebaseCollection) {
+                try {
+                    await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, "concierge_inquiries"), {
+                        name,
+                        email,
+                        phone,
+                        timeline,
+                        budget,
+                        details,
+                        model,
+                        category,
+                        locationData: locationData,
+                        timestamp: window.firebaseServerTimestamp()
+                    });
+                } catch (fbErr) {
+                    console.error("Firebase Error: ", fbErr);
+                }
+            }
             
             setTimeout(() => {
                 btn.innerText = 'Request Sent';
@@ -5657,7 +5717,7 @@ ${isFileLocked ? '' : `
         });
 
         // Make an Inquiry Form Logic
-        document.getElementById('inquiry-form')?.addEventListener('submit', (e) => {
+        document.getElementById('inquiry-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const form = e.target;
             const btn = form.querySelector('button[type="submit"]');
@@ -5675,6 +5735,34 @@ ${isFileLocked ? '' : `
             const entries = JSON.parse(localStorage.getItem('cire_inquiries') || '[]');
             entries.push({ name, email, phone, interest, message, ts: new Date().toISOString() });
             localStorage.setItem('cire_inquiries', JSON.stringify(entries));
+
+            // Attempt to fetch IP and Location
+            let locationData = {};
+            try {
+                const ipRes = await fetch('http://ip-api.com/json/');
+                if (ipRes.ok) {
+                    locationData = await ipRes.json();
+                }
+            } catch (err) {
+                console.error("IP API Error", err);
+            }
+
+            // Add to Firebase Firestore
+            if (window.firebaseDB && window.firebaseAddDoc && window.firebaseCollection) {
+                try {
+                    await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, "inquiries"), {
+                        name,
+                        email,
+                        phone,
+                        interest,
+                        message,
+                        locationData: locationData,
+                        timestamp: window.firebaseServerTimestamp()
+                    });
+                } catch (fbErr) {
+                    console.error("Firebase Error: ", fbErr);
+                }
+            }
             
             const succMsg = document.getElementById('inquiry-success');
             form.style.display = 'none';
