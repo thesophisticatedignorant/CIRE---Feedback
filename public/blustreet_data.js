@@ -52,7 +52,7 @@ window.BLUSTREET_DATA = [
         "local_image": "/assets/fleet/69065c55a204aca2c13b2ab0__0003_rolls-royce-dawn_rmbg.png"
     },
     {
-        "name": "Mclaren 720s Spider White",
+        "name": "McLaren 720s Spider White",
         "price": "1799",
         "image": "/cars/69065c54a204aca2c13b2a9d__0014_mclaren-720s-spider-white_rmbg.png",
         "valara_url": "https://app.valara.io/iframe/products/3e4140d6-55ed-47c8-bf02-9fef6607b4b3",
@@ -71,7 +71,7 @@ window.BLUSTREET_DATA = [
         ],
         "vehicle_info": {
             "Class/category": "Exotic",
-            "Make": "Mclaren",
+            "Make": "McLaren",
             "Model": "720s Spider",
             "Year": "2023-2024"
         },
@@ -182,7 +182,7 @@ window.BLUSTREET_DATA = [
         "local_image": "/assets/fleet/69d3f7aec3d49021973cc18d_1_rmbg.png"
     },
     {
-        "name": "Mclaren Artura Spyder Grey",
+        "name": "McLaren Artura Spyder Grey",
         "price": "1599",
         "image": "/cars/69065c5e4622fffa0bd2ed70__0013_mclaren-artura-spyder-grey_rmbg.png",
         "valara_url": "https://app.valara.io/iframe/products/3b60ae02-423b-4c85-8e77-e58d47f0a09e",
@@ -201,7 +201,7 @@ window.BLUSTREET_DATA = [
         ],
         "vehicle_info": {
             "Class/category": "Exotic",
-            "Make": "Mclaren",
+            "Make": "McLaren",
             "Model": "Artura Spyder",
             "Year": "2023-2024"
         },
@@ -260,7 +260,7 @@ window.BLUSTREET_DATA = [
         "local_image": "/assets/fleet/69fa1e872d62243b5fbb923a_a-(3)_rmbg.png"
     },
     {
-        "name": "Lamborghini Urus WBY",
+        "name": "Lamborghini Urus Widebody",
         "price": "1399",
         "image": "/cars/69d3ed187c55f2f0d0f6eb7a_13-(1)_rmbg.png",
         "valara_url": "https://app.valara.io/iframe/products/95523ea6-aabf-475f-94ff-185e3d01516a",
@@ -280,7 +280,7 @@ window.BLUSTREET_DATA = [
         "vehicle_info": {
             "Class/category": "Exotic SUV",
             "Make": "Lamborghini",
-            "Model": "Urus WBY",
+            "Model": "Urus Widebody",
             "Year": "2023-2024"
         },
         "local_image": "/assets/fleet/69d3ed187c55f2f0d0f6eb7a_13-(1)_rmbg.png"
