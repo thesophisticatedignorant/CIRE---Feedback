@@ -6457,6 +6457,8 @@
           return;
         }
 
+        window.history.pushState({}, '', '?file=' + encodeURIComponent(fileName));
+
         // RFD Document triggers
         if (fileName === "Join Network 🤝" || fileName === "join network 🤝") {
           openPopup("popup-guestbook");
@@ -6596,6 +6598,7 @@
 
       // Dynamic image popup
       function openImagePopup(title, src) {
+        window.history.pushState({}, '', '?file=' + encodeURIComponent(title));
         const popupId = "popup-" + title.replace(/[^a-zA-Z0-9]/g, "-");
         let popup = document.getElementById(popupId);
 
@@ -6619,6 +6622,7 @@
         popup.innerHTML = `
                 <div class="popup-titlebar">
                     <div class="popup-controls">
+                        <span class="popup-control share-btn" style="cursor:pointer; margin-right:8px;" title="Share Link" onclick="copyShareUrl('file', '${title}', this)">🔗</span>
                         <span class="popup-control close" onclick="closeImagePopup('${popupId}')"></span>
                         <span class="popup-control minimize" onclick="minimizePopup('${popupId}')"></span>
                         <span class="popup-control maximize" onclick="toggleGraphiteMode('${popupId}')"></span>
@@ -6870,6 +6874,7 @@
           openPopup("popup-guestbook");
           return;
         }
+        window.history.pushState({}, '', '?folder=' + encodeURIComponent(folderKey));
         selectedFolder = folderKey;
         selectedColumnIndex = -1; // Reset column selection
 
@@ -7640,6 +7645,7 @@
 
       // Open finder window
       function openFinderWindow(folderKey) {
+        window.history.pushState({}, '', '?folder=' + encodeURIComponent(folderKey));
         selectedFolder = folderKey || "macintosh-hd";
         finderWindow.classList.add("active");
 
@@ -8204,20 +8210,28 @@
               blocker.style.cursor = "wait";
               titlebar.appendChild(blocker);
 
-              setTimeout(() => {
-                if (titlebar.contains(blocker)) {
-                  titlebar.removeChild(blocker);
-                }
-              }, 5000);
+              if (!hasFolderLink && !hasFileLink) {
+                setTimeout(() => {
+                  if (titlebar.contains(blocker)) {
+                    titlebar.removeChild(blocker);
+                  }
+                }, 5000);
+              } else {
+                if (titlebar.contains(blocker)) titlebar.removeChild(blocker);
+              }
             }
           }
 
           // 5-Second Scroll Restriction on Mobile
           if (window.innerWidth <= 768) {
             document.body.classList.add("scroll-locked");
-            setTimeout(() => {
+            if (!hasFolderLink && !hasFileLink) {
+              setTimeout(() => {
+                document.body.classList.remove("scroll-locked");
+              }, 5000);
+            } else {
               document.body.classList.remove("scroll-locked");
-            }, 5000);
+            }
           }
 
           // Enforce Graphite Mode with 5s delay for Guestbook
@@ -8256,7 +8270,7 @@
               });
 
               // Remove blocking immediately (was 5000ms)
-              setTimeout(() => {
+              const removeBlocker = () => {
                 // Remove global blocker
                 if (globalBlocker && document.body.contains(globalBlocker)) {
                   document.body.removeChild(globalBlocker);
@@ -8271,7 +8285,13 @@
                 // Normalise z-index to fall into standard layer hierarchy
                 highestZIndex++;
                 gbWindow.style.zIndex = highestZIndex;
-              }, 5000); // RESTORED TO 5000ms per user request
+              };
+
+              if (!hasFolderLink && !hasFileLink) {
+                setTimeout(removeBlocker, 5000); // RESTORED TO 5000ms per user request
+              } else {
+                removeBlocker();
+              }
             }
           }, 100);
         }, launchDelay > 0 ? launchDelay : 300);
@@ -8572,7 +8592,25 @@
       }
 
       let isOpeningModal = false;
+      function copyShareLink() {
+        const itemName = document.getElementById("pd-title").innerText;
+        if (!itemName) return;
+        const shareUrl = window.location.origin + window.location.pathname + "?listing=" + encodeURIComponent(itemName);
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          const btn = document.getElementById("pd-share-btn");
+          const originalText = btn.innerText;
+          btn.innerText = "Copied!";
+          setTimeout(() => { btn.innerText = originalText; }, 2000);
+        }).catch(err => {
+          console.error("Failed to copy link: ", err);
+        });
+      }
+
       function openProductDetail(index, category) {
+        const item = window.currentShowroomData[index];
+        if (item) {
+          window.history.pushState({}, '', '?file=' + encodeURIComponent(item.name));
+        }
         if (isOpeningModal) return;
         isOpeningModal = true;
 
@@ -8918,18 +8956,37 @@
           >
             Vehicle Name
           </h2>
-          <button
-            onclick="closeProductDetail()"
-            style="
-              background: none;
-              border: none;
-              color: #8e8e93;
-              font-size: 24px;
-              cursor: pointer;
-            "
-          >
-            &times;
-          </button>
+          <div style="display: flex; gap: 1rem; align-items: center;">
+            <button
+              id="pd-share-btn"
+              onclick="copyShareLink()"
+              style="
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: #fff;
+                font-size: 12px;
+                padding: 4px 12px;
+                border-radius: 12px;
+                cursor: pointer;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+              "
+            >
+              Share Link
+            </button>
+            <button
+              onclick="closeProductDetail()"
+              style="
+                background: none;
+                border: none;
+                color: #8e8e93;
+                font-size: 24px;
+                cursor: pointer;
+              "
+            >
+              &times;
+            </button>
+          </div>
         </div>
         <div
           class="product-detail-body-container"
@@ -10099,11 +10156,65 @@
       if (typeof positionDesktopFolders === "function") {
         setTimeout(positionDesktopFolders, 100); // HMR fallback
       }
+
+      // Deep Linking Boot Sequence
+      setTimeout(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const folderParam = urlParams.get('folder');
+        const fileParam = urlParams.get('file');
+
+        if (folderParam && typeof openFinderWindow === 'function') {
+           openFinderWindow(folderParam);
+        } else if (fileParam) {
+           // Check if it's a BLUSTREET_DATA listing
+           let isListing = false;
+           if (window.BLUSTREET_DATA) {
+             const listingData = window.BLUSTREET_DATA.find(d => d.name === fileParam || d.name + ".png" === fileParam);
+             if (listingData) {
+               isListing = true;
+               const category = listingData.category === 'automotive' ? 'automotive' : (listingData.category === 'maritime' ? 'maritime' : listingData.category);
+               if (typeof openFinderWindow === 'function') {
+                  // Instantly populate the data without waiting for the network fetch
+                  window.currentShowroomData = window.BLUSTREET_DATA.filter(d => d.category === category);
+                  openFinderWindow(`concierge-${category}`);
+                  setTimeout(() => {
+                    const index = window.currentShowroomData.findIndex(d => d.name === fileParam || d.name + ".png" === fileParam);
+                    if (index !== -1 && typeof openProductDetail === 'function') {
+                      openProductDetail(index, category);
+                    }
+                  }, 600);
+               }
+             }
+           }
+           
+           if (!isListing) {
+             let foundFolder = "macintosh-hd";
+             if (typeof folderData !== 'undefined') {
+               for (const [key, val] of Object.entries(folderData)) {
+                 if (val && val.files) {
+                   if (val.files.some(f => f.name === fileParam || f.name.replace(/\.png$/, "") === fileParam)) {
+                     foundFolder = key;
+                     break;
+                   }
+                 }
+               }
+             }
+             if (typeof openFinderWindow === 'function') {
+               openFinderWindow(foundFolder);
+               setTimeout(() => {
+                 if (typeof handleFileDoubleClick === 'function') {
+                   handleFileDoubleClick(fileParam);
+                 }
+               }, 300);
+             }
+           }
+        }
+      }, 500);
     </script>
 
     <!-- HARDCODED COOKIE BANNER -->
-    <div id="site-footer-message-bar" style="position: fixed !important; bottom: 0 !important; left: 0 !important; width: 100vw !important; background-color: rgba(28, 28, 28, 0.95) !important; color: #a0a0a0 !important; padding: 1rem 2rem !important; font-size: 0.75rem !important; font-family: monospace !important; border-top: 1px solid #333 !important; z-index: 2147483647 !important; display: none !important; opacity: 0; transition: opacity 1s; flex-direction: column !important; justify-content: space-between !important; align-items: center !important; box-shadow: 0 -10px 30px rgba(0,0,0,0.5) !important; backdrop-filter: blur(10px) !important; box-sizing: border-box !important;">
-      <div style="margin-bottom: 1rem; width: 100%; text-align: center;">
+    <div id="site-footer-message-bar" style="position: fixed !important; bottom: 0 !important; left: 0 !important; width: 100vw !important; background-color: rgba(28, 28, 28, 0.95) !important; color: #a0a0a0 !important; padding: 1rem 2rem !important; font-size: 0.75rem !important; font-family: monospace !important; border-top: 1px solid #333 !important; z-index: 2147483647 !important; display: none !important; opacity: 0; transition: opacity 1s; flex-direction: row !important; justify-content: space-between !important; align-items: center !important; gap: 1rem !important; box-shadow: 0 -10px 30px rgba(0,0,0,0.5) !important; backdrop-filter: blur(10px) !important; box-sizing: border-box !important;">
+      <div style="margin-bottom: 0; flex: 1; text-align: left;">
         <p style="margin: 0; line-height: 1.5; color: #a0a0a0 !important; font-family: monospace !important; font-size: 0.75rem !important;">
           CIRE uses third-party cookies and other non-essential trackers for statistical analysis, to personalize your experience, and for advertising and social media purposes, including to track your use of our site, offer you advertisements that target your particular interests, improve our services, assist you more efficiently when browsing on our website and analyze the performance of our advertising campaigns. If you want more information about the trackers used, and your rights, read our 
           <button onclick="document.getElementById('cire-privacy-modal').style.display='flex'" style="color: #d0d0d0 !important; text-decoration: underline !important; background: none !important; border: none !important; cursor: pointer !important; font-family: inherit !important; font-size: inherit !important; padding: 0 !important;">Privacy Policy</button>.
@@ -10118,7 +10229,7 @@
 
     <!-- PRIVACY POLICY MODAL -->
     <div id="cire-privacy-modal" style="display: none; position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; background-color: rgba(0,0,0,0.8) !important; z-index: 2147483648 !important; justify-content: center !important; align-items: center !important; backdrop-filter: blur(5px) !important;">
-      <div style="background-color: #1c1c1c !important; border: 1px solid #333 !important; padding: 2rem !important; max-width: 400px !important; width: 90% !important; text-align: center !important; font-family: monospace !important; color: #a0a0a0 !important; box-shadow: 0 10px 40px rgba(0,0,0,0.8) !important;">
+      <div style="background-color: #1c1c1c !important; border: 1px solid #333 !important; padding: 1.5rem !important; max-width: 340px !important; width: 90% !important; text-align: center !important; font-family: monospace !important; color: #a0a0a0 !important; box-shadow: 0 10px 40px rgba(0,0,0,0.8) !important;">
         <h2 style="color: #fff !important; margin-top: 0 !important; font-size: 1.2rem !important; margin-bottom: 1rem !important; text-transform: uppercase !important; letter-spacing: 0.1em !important;">Privacy Policy</h2>
         <p style="line-height: 1.5 !important; font-size: 0.85rem !important; margin-bottom: 1.5rem !important;">
           CIRE uses third-party cookies and trackers for statistical analysis, personalization, and advertising purposes.
@@ -10158,19 +10269,19 @@
         const forceBanner = urlParams.get('forceBanner') === 'true';
         const banner = document.getElementById('site-footer-message-bar');
         
-        if (!forceBanner && localStorage.getItem('cire_cookie_consent_v5')) {
+        if (!forceBanner && localStorage.getItem('cire_cookie_consent_v6')) {
           banner.style.setProperty('display', 'none', 'important');
         } else {
           // Delay appearance by 30 seconds (or immediately if debugging)
           const delay = forceBanner ? 0 : 30000;
           setTimeout(() => {
             banner.style.setProperty('display', 'flex', 'important');
-            setTimeout(() => banner.style.opacity = '1', 50);
+            setTimeout(() => banner.style.setProperty('opacity', '1', 'important'), 50);
           }, delay);
 
           document.getElementById('site-ack-btn').addEventListener('click', async function() {
-            localStorage.setItem('cire_cookie_consent_v5', 'granted');
-            banner.style.opacity = '0';
+            localStorage.setItem('cire_cookie_consent_v6', 'granted');
+            banner.style.setProperty('opacity', '0', 'important');
             setTimeout(() => banner.style.setProperty('display', 'none', 'important'), 1000);
             
             // Consent specific logging
