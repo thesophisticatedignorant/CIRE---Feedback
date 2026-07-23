@@ -15,7 +15,7 @@ const tagColors = {
 const tagsList = [];
 
 export default function FinderWindow() {
-    const { openWindow, openFileWindow, selectedFolder, setSelectedFolder, toggleSubscribePopup, toggleCuratedContent } = useWindowManager();
+    const { openWindow, openFileWindow, selectedFolder, setSelectedFolder, toggleSubscribePopup, toggleCuratedContent, togglePrivacyPolicy } = useWindowManager();
     const [currentView, setCurrentView] = useState('icons');
     const [selectedGalleryIndex, setSelectedGalleryIndex] = useState(0);
     const [viewMenuOpen, setViewMenuOpen] = useState(false);
@@ -34,6 +34,9 @@ export default function FinderWindow() {
             { name: 'fashion house.png', type: 'image' },
             { name: 'Maison Manifest', type: 'folder' },
             { name: 'coming soon.mp4', type: 'video' },
+        ],
+        'privacy-policy': [
+            { name: 'privacy policy.rtfd', type: 'document' },
         ],
         'sophisticated-brilliance': [
             { name: 'coming soon.mp4', type: 'video' },
@@ -83,6 +86,7 @@ export default function FinderWindow() {
 
     // Map files to window actions
     const fileActions = {
+        'privacy policy.rtfd': () => togglePrivacyPolicy(true),
         'maison overview.rtf': () => openWindow('archive'),
         'blackscale CIRE logo.png': () => openFileWindow('blackscale CIRE logo.png', '/blackscale CIRE logo.png'),
         'art house.png': () => openFileWindow('art house.png', '/art house.png'),
@@ -115,6 +119,7 @@ export default function FinderWindow() {
 
     const folders = [
         { label: 'Macintosh HD', key: 'macintosh-hd', icon: 'fa-desktop', count: 0 },
+        { label: 'Privacy Policy', key: 'privacy-policy', icon: 'fa-lock', count: filesByFolder['privacy-policy']?.length || 0 },
         { label: 'CIRE', key: 'archive', count: filesByFolder.archive?.length || 0 },
         { label: 'Sophisticated Brilliance', key: 'sophisticated-brilliance', count: filesByFolder['sophisticated-brilliance']?.length || 0 },
         { label: 'Sophisticated Ignorance', key: 'sophisticated-ignorance', count: filesByFolder['sophisticated-ignorance']?.length || 0 },
@@ -199,7 +204,7 @@ export default function FinderWindow() {
                             <i className={icon.class} style={{ color: icon.color }}></i>
                         </div>
                     </div>
-                    <div className="finder-gallery-info">
+                    <div className="finder-gallery-info" style={{ paddingTop: '24px' }}>
                         <div className="finder-gallery-info-header">
                             <i className={icon.class} style={{ color: icon.color }}></i>
                             <div>
@@ -245,7 +250,7 @@ export default function FinderWindow() {
                         </div>
                     </div>
                 </div>
-                <div className="finder-gallery-thumbnails">
+                <div className="finder-gallery-thumbnails" style={{ paddingBottom: '16px', minHeight: '80px', display: 'flex', alignItems: 'center' }}>
                     {files.map((file, index) => {
                         const thumbIcon = getFileIcon(file.type);
                         return (
@@ -253,6 +258,7 @@ export default function FinderWindow() {
                                 key={index}
                                 className={`finder-gallery-thumbnail ${index === selectedGalleryIndex ? 'selected' : ''}`}
                                 onClick={() => setSelectedGalleryIndex(index)}
+                                title={file.name}
                             >
                                 <i className={thumbIcon.class} style={{ color: thumbIcon.color }}></i>
                             </div>
@@ -280,18 +286,18 @@ export default function FinderWindow() {
     };
 
     const renderIconsView = () => (
-        <div className="finder-file-list" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '10px' }}>
+        <div className="finder-file-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignContent: 'flex-start', justifyContent: 'flex-start' }}>
             {files.map((file, index) => {
                 const icon = getFileIcon(file.type);
                 return (
                     <div
                         key={index}
                         className="finder-file-item"
-                        style={{ flexDirection: 'column', textAlign: 'center', padding: '10px' }}
+                        style={{ flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '10px', width: '80px', height: '80px' }}
                         onClick={() => handleFileClick(file.name)}
                     >
                         <i className={icon.class} style={{ fontSize: '32px', color: icon.color, marginBottom: '8px' }}></i>
-                        <span className="finder-file-name" style={{ fontSize: '11px' }}>{file.name}</span>
+                        <span className="finder-file-name" style={{ fontSize: '11px', whiteSpace: 'normal', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: '1.2' }}>{file.name}</span>
                     </div>
                 );
             })}

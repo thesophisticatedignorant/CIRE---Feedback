@@ -1,0 +1,1482 @@
+diff --git a/index.html b/index.html
+index b16f0ab..00927ca 100644
+--- a/index.html
++++ b/index.html
+@@ -17,6 +17,47 @@
+     <script src="/blustreet_data.js"></script>
+     <script type="module" src="/firebase_setup.js"></script>
+     <style>
++      /* Force Portrait Mode Overlay */
++      #portrait-lock {
++        display: none;
++        position: fixed;
++        top: 0;
++        left: 0;
++        width: 100vw;
++        height: 100vh;
++        background: black;
++        color: white;
++        z-index: 9999999 !important;
++        flex-direction: column;
++        justify-content: center;
++        align-items: center;
++        text-align: center;
++        padding: 20px;
++      }
++      
++      #portrait-lock i {
++        font-size: 3rem;
++        margin-bottom: 20px;
++        animation: spinPhone 2s infinite ease-in-out;
++      }
++
++      @keyframes spinPhone {
++        0% { transform: rotate(-90deg); }
++        50% { transform: rotate(0deg); }
++        100% { transform: rotate(0deg); }
++      }
++
++      @media screen and (max-width: 900px) and (orientation: landscape) {
++        #portrait-lock {
++          display: flex !important;
++        }
++        body {
++          overflow: hidden !important;
++        }
++        #desktop, .toggle-container {
++          display: none !important;
++        }
++      }
+       .wwn-tooltip {
+         background: #000 !important;
+         border: 1px solid #333 !important;
+@@ -285,12 +326,7 @@
+ 
+       /* Sidebar */
+       .sidebar {
+-        width: 200px;
+-        background-color: rgba(35, 35, 35, 0.9);
+-        padding: 15px 0;
+-        border-right: 1px solid rgba(255, 255, 255, 0.05);
+-        overflow-y: auto;
+-        flex-shrink: 0;
++        display: none !important;
+       }
+ 
+       .sidebar-section {
+@@ -390,10 +426,11 @@
+ 
+       /* Icon View */
+       .icon-view {
+-        display: grid;
+-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
++        display: flex;
++        flex-wrap: wrap;
++        justify-content: center;
+         gap: 20px;
+-        padding: 10px;
++        padding: 20px;
+       }
+ 
+       .icon-view-item {
+@@ -405,6 +442,7 @@
+         border-radius: 8px;
+         cursor: pointer;
+         transition: background-color 0.2s;
++        width: 100px; /* Fixed width to ensure neat rows */
+       }
+ 
+       .icon-view-item:hover {
+@@ -419,7 +457,9 @@
+       .icon-view-item .name {
+         font-size: 12px;
+         color: #fff;
+-        word-break: break-word;
++        word-break: normal;
++        overflow-wrap: normal;
++        text-align: center;
+       }
+ 
+       /* Column View */
+@@ -429,7 +469,8 @@
+       }
+ 
+       .column {
+-        min-width: 200px;
++        flex: 0 0 250px;
++        min-width: 250px;
+         border-right: 1px solid rgba(255, 255, 255, 0.05);
+         overflow-y: auto;
+       }
+@@ -463,8 +504,9 @@
+ 
+       /* Column Preview Panel */
+       .column-preview {
+-        min-width: 250px;
+-        max-width: 250px;
++        flex: 1;
++        min-width: 0;
++        max-width: none;
+         background-color: rgba(35, 35, 35, 0.95);
+         border-left: 1px solid rgba(255, 255, 255, 0.05);
+         overflow-y: auto;
+@@ -778,8 +820,13 @@
+         color: #5ac8fa;
+       }
+ 
++      .sidebar {
++        display: none !important;
++      }
++
+       .gallery-thumbnails {
+-        height: 75px;
++        min-height: 85px;
++        height: auto;
+         background-color: rgba(30, 30, 30, 0.9);
+         padding: 10px;
+         display: flex;
+@@ -792,17 +839,30 @@
+       }
+ 
+       .gallery-thumbnail {
+-        flex: 0 0 55px;
+-        height: 55px;
+-        background-color: rgba(60, 60, 60, 0.5);
++        flex: 0 0 65px;
++        height: auto;
++        min-height: 65px;
++        background-color: transparent;
+         border-radius: 4px;
+         overflow: hidden;
+         display: flex;
++        flex-direction: column;
+         align-items: center;
+-        justify-content: center;
++        justify-content: flex-start;
+         cursor: pointer;
+         border: 2px solid transparent;
+         transition: border-color 0.2s;
++        padding-top: 4px;
++      }
++
++      .gallery-thumbnail-image-container {
++        width: 45px;
++        height: 45px;
++        background-color: rgba(60, 60, 60, 0.5);
++        border-radius: 4px;
++        display: flex;
++        align-items: center;
++        justify-content: center;
+       }
+ 
+       .gallery-thumbnail:hover {
+@@ -973,6 +1033,8 @@
+       .popup-content {
+         padding: 20px;
+         color: #f5f5f7;
++        overflow-y: auto;
++        flex: 1;
+       }
+ 
+       .popup-content h1 {
+@@ -1928,80 +1990,372 @@
+         color: #636366;
+       }
+ 
+-      /* Portrait Warning Overlay */
+-      .portrait-overlay {
+-        position: fixed;
+-        top: 0;
+-        left: 0;
+-        width: 100vw;
+-        height: 100vh;
+-        background-color: #000;
+-        z-index: 99999;
+-        display: none;
+-        flex-direction: column;
+-        align-items: center;
+-        justify-content: center;
+-        color: white;
+-      }
+-
+-      .rotate-phone {
+-        width: 60px;
+-        height: 100px;
+-        border: 3px solid white;
+-        border-radius: 8px;
+-        position: relative;
+-        animation: rotateRight 2s infinite ease-in-out;
+-      }
++      @media screen and (max-width: 768px) {
++        .macos-desktop {
++          background-position: center center !important;
++          background-size: cover !important;
++          background-attachment: fixed !important;
++        }
+ 
+-      .rotate-phone::after {
+-        content: "";
+-        position: absolute;
+-        bottom: 6px;
+-        left: 50%;
+-        transform: translateX(-50%);
+-        width: 20px;
+-        height: 3px;
+-        background-color: white;
+-        border-radius: 2px;
+-      }
++        body {
++          overflow-y: auto !important;
++          overflow-x: hidden !important;
++        }
+ 
+-      @keyframes rotateRight {
+-        0%,
+-        20% {
+-          transform: rotate(0deg);
++        body.scroll-locked {
++          overflow-y: hidden !important;
+         }
+-        50%,
+-        80% {
+-          transform: rotate(90deg);
++
++        #mobile-tutorial-overlay {
++          position: fixed !important;
++          top: 0 !important;
++          left: 0 !important;
++          width: 100vw !important;
++          height: 100vh !important;
++          background: rgba(0, 0, 0, 0.95) !important;
++          z-index: 999999 !important;
++          display: flex;
++          flex-direction: column;
++          justify-content: center;
++          align-items: center;
++          color: white;
++          font-family: -apple-system, sans-serif;
++          transition: opacity 0.5s ease-out;
+         }
+-        100% {
+-          transform: rotate(0deg);
++
++        .tutorial-step {
++          display: flex;
++          flex-direction: column;
++          align-items: center;
++          text-align: center;
++          position: absolute;
++          transition: opacity 0.5s ease-in-out;
+         }
+-      }
+ 
+-      .portrait-overlay p {
+-        margin-top: 40px;
+-        font-size: 16px;
+-        font-family: "Courier New", monospace;
+-        text-transform: uppercase;
+-        letter-spacing: 2px;
+-        text-align: center;
+-      }
++        .tutorial-step p {
++          margin-top: 20px;
++          font-size: 16px;
++          font-weight: 500;
++          letter-spacing: 1px;
++          max-width: 80%;
++        }
+ 
+-      @media screen and (max-width: 768px) and (orientation: portrait) {
+-        .portrait-overlay {
++        .css-iphone {
++          width: 50px;
++          height: 100px;
++          border: 3px solid white;
++          border-radius: 12px;
++          position: relative;
++          animation: rotatePhone 2s ease-in-out forwards;
++          animation-delay: 0.5s;
+           display: flex;
++          justify-content: center;
++          align-items: flex-end;
++          padding-bottom: 5px;
++          box-sizing: border-box;
++        }
++
++        .css-iphone::before {
++          content: '';
++          position: absolute;
++          top: 0;
++          width: 24px;
++          height: 4px;
++          background: white;
++          border-bottom-left-radius: 4px;
++          border-bottom-right-radius: 4px;
++        }
++
++        .css-iphone::after {
++          content: '';
++          width: 8px;
++          height: 8px;
++          border-radius: 50%;
++          border: 1px solid white;
++          box-sizing: border-box;
++        }
++
++        .finger-icon {
++          font-size: 60px;
++          animation: tapFinger 1.5s ease-in-out infinite;
++        }
++
++        @keyframes rotatePhone {
++          0% { transform: rotate(0deg); }
++          100% { transform: rotate(90deg); }
++        }
++
++        @keyframes tapFinger {
++          0%, 100% { transform: scale(1) translateY(0); }
++          50% { transform: scale(0.9) translateY(10px); }
++        }
++
++        #desktop {
++          display: flex !important;
++          flex-direction: column !important;
++          align-items: center !important;
++          justify-content: flex-start !important;
++          gap: 40px !important;
++          padding-top: 60px !important;
++          padding-bottom: 60px !important;
++          height: auto !important;
++          min-height: 100vh !important;
++          overflow-x: hidden !important;
++          width: 100vw !important;
++        }
++
++        .view-menu-item[data-view="columns"],
++        .view-menu-item[data-view="gallery"] {
++          display: none !important;
++        }
++
++        /* The feed windows */
++        #popup-guestbook, #popup-maison, #popup-brilliance, #popup-ignorance, #popup-transcendence, .window-container, .popup-window, #finder-window {
++          position: relative !important;
++          width: 95vw !important;
++          margin: 0 auto !important;
++          left: auto !important;
++          top: auto !important;
++          transform: none !important;
++          max-width: none !important;
++          height: auto !important;
++          max-height: none !important;
++        }
++
++        .popup-window .popup-content {
++          overflow-y: visible !important;
++          height: auto !important;
++        }
++
++        /* Join Network Layout specific for mobile */
++        #popup-guestbook > div:not(.popup-titlebar) {
++          display: flex !important;
++          flex-direction: column !important;
++          height: auto !important;
++          overflow: visible !important;
++        }
++
++        #wwn-map {
++          position: relative !important;
++          height: 250px !important;
++          width: 100% !important;
++        }
++
++        #wwn-form-panel {
++          position: relative !important;
++          width: 100% !important;
++          border-left: none !important;
++          border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
++          zoom: 0.8 !important; /* Scale down the data entry box */
++        }
++
++        /* Hiding specific elements */
++        #deterrent-overlay,
++        #grid-overlay {
++          display: none !important;
++        }
++
++        /* Inquiry Form Scale Down */
++        #inquiry-form {
++          zoom: 0.8 !important;
++        }
++
++        /* Finder Window is now governed by the generic popup rules above, no zoom */
++        #finder-window {
++          zoom: 1 !important;
++          height: 70vh !important;
++          max-height: 600px !important;
++          overflow: hidden !important;
++        }
++        
++        #finder-window .window-content {
++          overflow: hidden !important;
++        }
++
++        #finder-window .sidebar {
++          display: none !important;
++        }
++        
++        #finder-window .sidebar-item {
++          font-size: 11px !important;
++          padding: 6px 8px !important;
++          white-space: nowrap !important;
++          overflow: hidden !important;
++          text-overflow: ellipsis !important;
++          display: flex !important;
++          align-items: center !important;
++        }
++
++        #finder-window .sidebar-item .count {
++          font-size: 9px !important;
++          min-width: 14px !important;
++          margin-left: auto !important;
++        }
++        
++        #finder-window .column-view {
++          flex-direction: column !important;
++          overflow-y: auto !important;
++        }
++        #finder-window .column-view .column {
++          width: 100% !important;
++          min-width: 100% !important;
++          height: auto !important;
++          border-right: none !important;
++          border-bottom: 1px solid #1a1a1a !important;
++        }
++        #finder-window .column-view .column-preview {
++          width: 100% !important;
++          max-width: 100% !important;
++          box-sizing: border-box !important;
++          height: auto !important;
++          min-height: 300px !important;
++          overflow-y: visible !important;
++          padding: 15px !important;
++        }
++
++        #finder-window .gallery-main {
++          flex-direction: column !important;
++          overflow-y: auto !important;
++        }
++        #finder-window .gallery-preview-area {
++          width: 100% !important;
++          box-sizing: border-box !important;
++          min-height: 300px !important;
++          height: auto !important;
++        }
++        #finder-window .gallery-sidebar {
++          width: 100% !important;
++          max-width: 100% !important;
++          min-width: 100% !important;
++          box-sizing: border-box !important;
++          padding: 15px !important;
++          height: auto !important;
++          border-left: none !important;
++          border-top: 1px solid #1a1a1a !important;
++        }
++
++        #finder-window .icon-view-grid {
++          overflow-x: hidden !important;
++          padding: 10px !important;
++          grid-template-columns: repeat(3, 1fr) !important;
++          gap: 10px !important;
++        }
++
++
++        #finder-window .list-header {
++          grid-template-columns: 2fr 1fr 1fr !important;
++          font-size: 10px !important;
++          gap: 5px !important;
++        }
++
++        #finder-window .list-item {
++          grid-template-columns: 2fr 1fr 1fr !important;
++          font-size: 10px !important;
++          gap: 5px !important;
++        }
++
++        #finder-window .list-item .date, 
++        #finder-window .list-item .size {
++          font-size: 9px !important;
++        }
++        
++        #finder-window .list-item img {
++          max-width: 30px !important;
++          max-height: 20px !important;
++        }
++        
++        .product-detail-body {
++          flex-direction: column !important;
++          padding: 0 !important;
++          gap: 20px !important;
++        }
++        
++        .product-detail-body-container {
++          padding: 20px !important;
++        }
++
++        .desktop-folder {
++          position: fixed !important;
++          width: 80px; /* slightly smaller icons */
++          padding: 5px;
++          z-index: 50 !important;
++        }
++
++        .desktop-folder .icon {
++          font-size: 36px;
++        }
++
++        .desktop-folder .label {
++          font-size: 10px;
++          width: 80px;
++        }
++
++        /* Adjust internal grids for mobile */
++        .gallery-grid, .archive-grid, .cire-fleet-grid {
++          grid-template-columns: 1fr !important;
++          gap: 15px !important;
++        }
++
++        .icon-view {
++          display: grid !important;
++          grid-template-columns: repeat(3, 1fr) !important;
++          gap: 15px !important;
++          padding: 15px !important;
++          justify-items: center !important;
++        }
++        
++        .icon-view-item {
++          width: auto !important;
++          padding: 5px !important;
++        }
++
++        .form-row {
++          flex-direction: column !important;
++          gap: 12px !important;
++        }
++
++        .checkbox-group {
++          grid-template-columns: 1fr !important;
++        }
++
++        /* Carousel position for mobile */
++        .carousel-container {
++          position: fixed !important;
++          bottom: 0 !important;
++          top: auto !important;
++          z-index: 0 !important;
++          transform: none !important;
++          width: 100vw !important;
++        }
++        .carousel-track-wrapper {
++          height: 90px !important; /* Scaled down height */
++          padding: 5px 0 !important;
++        }
++        .carousel-item {
++          flex: 0 0 120px !important; /* Scaled down width */
++          font-size: 0.9rem !important; /* Scaled down text */
+         }
+       }
+     </style>
+   </head>
+ 
+   <body>
+-    <div class="portrait-overlay">
+-      <div class="rotate-phone"></div>
+-      <p>Rotate Screen</p>
++    <!-- Landscape Blocker Overlay -->
++    <div id="portrait-lock">
++      <i class="fas fa-mobile-alt"></i>
++      <h2>Please Rotate Your Device</h2>
++      <p style="margin-top: 10px; color: #ccc;">This experience is designed exclusively for portrait mode.</p>
+     </div>
++
+     <div class="macos-desktop" id="desktop">
++      
++      <!-- Mobile Tutorial Overlay -->
++      <div id="mobile-tutorial-overlay" style="display: none;">
++        <div class="tutorial-step" id="tutorial-tap">
++          <i class="fas fa-mouse-pointer finger-icon"></i>
++          <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 300; letter-spacing: 1.5px; text-transform: uppercase; font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 10px;">Click wallpaper to reveal desktop</p>
++        </div>
++      </div>
+       <!-- Light/Dark Toggle -->
+       <div class="toggle-container">
+         <label class="toggle-switch">
+@@ -3033,14 +3387,14 @@
+               window._wwnMapInitialized = true;
+ 
+               const map = L.map("wwn-map", {
+-                center: [20, 0],
++                center: [40, -95],
+                 zoom: 2,
+                 zoomControl: false,
+                 attributionControl: false,
+                 scrollWheelZoom: true,
+                 dragging: true,
+                 minZoom: 1,
+-                maxZoom: 7,
++                maxZoom: 11,
+               });
+ 
+               // Pure black background + dark tile layer
+@@ -3490,6 +3844,25 @@
+         </div>
+       </div>
+ 
++      <!-- Power Perfected Video Window -->
++      <div
++        class="popup-window"
++        id="popup-power-video"
++        style="top: 100px; left: 300px; max-width: 600px; padding: 0; background: transparent; border: none; box-shadow: none;"
++      >
++        <div class="popup-titlebar" style="background: rgba(30, 30, 30, 0.95);">
++          <div class="popup-controls">
++            <div class="popup-control close" onclick="closePopup('popup-power-video')"></div>
++            <div class="popup-control minimize" onclick="minimizePopup('popup-power-video')"></div>
++            <div class="popup-control maximize" onclick="toggleGraphiteMode('popup-power-video')"></div>
++          </div>
++          <span class="popup-title">POWER PERFECTED IN POSITION</span>
++        </div>
++        <div class="popup-content" style="padding: 0; display: flex; align-items: center; justify-content: center; background: black;">
++          <video src="/assets/SI-Spiral-Stream.mp4" autoplay loop muted playsinline style="width: 100%; height: auto; display: block; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"></video>
++        </div>
++      </div>
++
+       <!-- NEW DOCUMENTS -->
+       <div
+         class="popup-window"
+@@ -4247,6 +4620,7 @@
+ 
+           <!-- Form content -->
+           <div
++            class="popup-content"
+             style="
+               padding: 20px;
+               overflow-y: auto;
+@@ -4647,7 +5021,7 @@
+                   OTHER
+                 </option>
+                 <option
+-                  value="General Enquiry"
++                  value="General Inquiry"
+                   style="
+                     color: #fff;
+                     font-family: Helvetica, Arial, sans-serif;
+@@ -4655,7 +5029,7 @@
+                     text-transform: uppercase;
+                   "
+                 >
+-                  &nbsp;&nbsp;General Enquiry
++                  &nbsp;&nbsp;General Inquiry
+                 </option>
+                 <option
+                   value="Media & Press"
+@@ -4983,6 +5357,18 @@
+     <script>
+       // Data matching your existing structure
+       const folderData = {
++        "macintosh-hd": {
++          label: "Macintosh HD",
++          files: [
++            { name: "CIRE Canon", type: "folder", targetFolder: "cire-canon" },
++            { name: "CIRE Concierge", type: "folder", targetFolder: "cire-concierge" },
++            { name: "CIRE Hospitality", type: "folder", targetFolder: "cire-hospitality" },
++            { name: "Sophisticated Brilliance", type: "folder", targetFolder: "sophisticated-brilliance" },
++            { name: "Sophisticated Ignorance", type: "folder", targetFolder: "sophisticated-ignorance" },
++            { name: "Curated Content", type: "folder", targetFolder: "curated" },
++            { name: "Join Network 🤝", type: "folder", targetFolder: "join-network" }
++          ]
++        },
+         "cire-canon": {
+           label: "CIRE Canon",
+           files: [
+@@ -5234,13 +5620,11 @@
+               src: "/transcendence of man.mp4",
+             },
+             { name: "sketches", type: "folder", targetFolder: "tom-sketches" },
+-            { name: "cads", type: "folder", targetFolder: "tom-cads" },
+             {
+               name: "renderings",
+               type: "folder",
+               targetFolder: "tom-renderings",
+             },
+-            { name: "wax models", type: "folder", targetFolder: "tom-wax" },
+             { name: "final", type: "folder", targetFolder: "tom-final" },
+           ],
+         },
+@@ -5255,7 +5639,7 @@
+             {
+               name: "sketch: beast.png",
+               type: "image",
+-              src: "/sketch: beast.png",
++              src: "/beast-jp.png",
+             },
+             {
+               name: "sketch: metamorphosis.png",
+@@ -5263,39 +5647,18 @@
+               src: "/sketch: metamorphosis.png",
+             },
+             {
+-              name: "sketch: beast 2.png",
++              name: "sketch: humble.png",
+               type: "image",
+-              src: "/sketch: beast.png",
++              src: "/humble-jp.png",
+             },
+             {
+-              name: "sketch: the celestial scar.png",
++              name: "sketch: celestial scars.png",
+               type: "image",
+-              src: "/sketch: the celestial scar.png",
+-            },
+-          ],
+-        },
+-        "tom-cads": {
+-          label: "cads",
+-          files: [
+-            {
+-              name: "cad: the nails.mp4",
+-              type: "video",
+-              src: "/cad: the nails.mp4",
+-            },
+-            { name: "cad: beast.mp4", type: "video", src: "/cad: beast.mp4" },
+-            {
+-              name: "cad: metamorphosis.mp4",
+-              type: "video",
+-              src: "/cad: metamorphosis.mp4",
+-            },
+-            { name: "cad: beast 2.mp4", type: "video", src: "/cad: beast.mp4" },
+-            {
+-              name: "cad: the celestial scar.mp4",
+-              type: "video",
+-              src: "/cad: the celestial scar.mp4",
++              src: "/sketch: celestial scars.png",
+             },
+           ],
+         },
++
+         "tom-renderings": {
+           label: "renderings",
+           files: [
+@@ -5315,47 +5678,18 @@
+               src: "/rendering: metamorphosis.mp4",
+             },
+             {
+-              name: "rendering: beast 2.mp4",
++              name: "rendering: humble.mp4",
+               type: "video",
+               src: "/rendering: beast.mp4",
+             },
+             {
+-              name: "rendering: the celestial scar.mp4",
++              name: "rendering: celestial scars.mp4",
+               type: "video",
+-              src: "/rendering: the celestial scar.mp4",
+-            },
+-          ],
+-        },
+-        "tom-wax": {
+-          label: "wax models",
+-          files: [
+-            {
+-              name: "wax model: the nails.png",
+-              type: "image",
+-              src: "/wax model: the nails.png",
+-            },
+-            {
+-              name: "wax model: beast.png",
+-              type: "image",
+-              src: "/wax model: beast.png",
+-            },
+-            {
+-              name: "wax model: metamorphosis.png",
+-              type: "image",
+-              src: "/wax model: metamorphosis.png",
+-            },
+-            {
+-              name: "wax model: beast 2.png",
+-              type: "image",
+-              src: "/wax model: beast.png",
+-            },
+-            {
+-              name: "wax model: the celestial scar.png",
+-              type: "image",
+-              src: "/wax model: the celestial scar.png",
++              src: "/rendering: celestial scars.mp4",
+             },
+           ],
+         },
++
+         "tom-final": {
+           label: "final",
+           files: [
+@@ -5375,14 +5709,14 @@
+               src: "/final: metamorphosis.mp4",
+             },
+             {
+-              name: "final: beast 2.mp4",
++              name: "final: humble.mp4",
+               type: "video",
+               src: "/final: beast.mp4",
+             },
+             {
+-              name: "final: the celestial scar.mp4",
++              name: "final: celestial scars.mp4",
+               type: "video",
+-              src: "/final: the celestial scar.mp4",
++              src: "/final: celestial scars.mp4",
+             },
+           ],
+         },
+@@ -5439,7 +5773,7 @@
+         }));
+       }
+ 
+-      let selectedFolder = "cire-canon";
++      let selectedFolder = "macintosh-hd";
+       let currentView = "columns";
+       let selectedGalleryIndex = 0;
+       let selectedColumnIndex = -1;
+@@ -5483,6 +5817,7 @@
+ 
+       // Popup window management
+       let highestZIndex = 100;
++      let currentMobileOrder = 0;
+ 
+       // Global keydown for navigation
+       document.addEventListener("keydown", (e) => {
+@@ -5629,6 +5964,23 @@
+ 
+           // Show popup
+           popup.classList.add("active");
++          
++          if (window.innerWidth <= 768) {
++            // Move popup to top of desktop
++            const desktop = document.getElementById("desktop");
++            const toggleContainer = desktop.querySelector(".toggle-container");
++            if (toggleContainer && toggleContainer.nextSibling) {
++              desktop.insertBefore(popup, toggleContainer.nextSibling);
++            } else {
++              desktop.prepend(popup);
++            }
++            // Add a small delay for smooth scrolling to take effect after DOM move
++            setTimeout(() => {
++              window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
++              document.documentElement.scrollTop = 0;
++              document.body.scrollTop = 0;
++            }, 50);
++          }
+ 
+           // Center popup
+           const popupWidth =
+@@ -5653,6 +6005,12 @@
+           highestZIndex++;
+           popup.style.zIndex = highestZIndex;
+ 
++          // Reset popup content scroll
++          const content = popup.querySelector('.popup-content');
++          if (content) content.scrollTop = 0;
++
++
++
+           // Enforce Graphite Mode for Guestbook PERMANENTLY
+           if (popupId === "popup-guestbook") {
+             if (!popup.classList.contains("graphite-mode")) {
+@@ -5868,6 +6226,19 @@
+ 
+       // Select column item (single click) - shows preview
+       function selectColumnItem(index) {
++        if (window.innerWidth <= 768 && selectedColumnIndex === index) {
++            const files = folderData[selectedFolder]?.files || [];
++            const selectedFile = files[index];
++            if (selectedFile) {
++                if (selectedFile.type === "folder") {
++                    selectFolder(selectedFile.targetFolder);
++                } else {
++                    handleFileDoubleClick(selectedFile.name.replace(/\.png$/, ""));
++                }
++            }
++            return;
++        }
++
+         selectedColumnIndex = index;
+         let selector = ".column-item";
+         if (currentView === "list") selector = ".list-item";
+@@ -6044,16 +6415,24 @@
+ 
+       function handleFileSingleClick(fileName) {
+         const currentFiles = folderData[selectedFolder]?.files || [];
+-        const clickedFile = currentFiles.find(
+-          (f) =>
+-            f.name === fileName || f.name.replace(/\.png$/, "") === fileName,
+-        );
+-        if (clickedFile) {
+-          selectedFile = clickedFile;
+-          selectedColumnIndex = currentFiles.findIndex(
++        const index = currentFiles.findIndex(
+             (f) =>
+               f.name === fileName || f.name.replace(/\.png$/, "") === fileName,
+           );
++        const clickedFile = currentFiles[index];
++
++        if (clickedFile) {
++          if (window.innerWidth <= 768 && selectedColumnIndex === index) {
++            if (clickedFile.type === "folder") {
++                selectFolder(clickedFile.targetFolder);
++            } else {
++                handleFileDoubleClick(clickedFile.name.replace(/\.png$/, ""));
++            }
++            return;
++          }
++
++          selectedFile = clickedFile;
++          selectedColumnIndex = index;
+ 
+           // Highlight in icon and list view
+           document
+@@ -6378,8 +6757,8 @@
+         // Item 14: rendering: metamorphosis.mp4 | Item 15: final: metamorphosis.mp4
+         // Item 16: sketch: beast.png | Item 17: cad: beast.mp4 | Item 18: wax model: beast.png
+         // Item 19: rendering: beast.mp4 | Item 20: final: beast.mp4
+-        // Item 21: sketch: the celestial scar.png | Item 22: cad: the celestial scar.mp4 | Item 23: wax model: the celestial scar.png
+-        // Item 24: rendering: the celestial scar.mp4 | Item 25: final: the celestial scar.mp4
++        // Item 21: sketch: celestial scars.png | Item 22: cad: celestial scars.mp4 | Item 23: wax model: celestial scars.png
++        // Item 24: rendering: celestial scars.mp4 | Item 25: final: celestial scars.mp4
+         const topItems = Array.from({ length: 25 }).map((_, i) => ({
+           id: i,
+           title: `Item ${i + 1}`,
+@@ -6430,13 +6809,12 @@
+       // Populate sidebar
+       // Folders that are now nested inside other folders (not shown in sidebar)
+       const nestedFolders = [
++        "macintosh-hd",
+         "video",
+         "maison",
+         "power",
+         "tom-sketches",
+-        "tom-cads",
+         "tom-renderings",
+-        "tom-wax",
+         "tom-final",
+         "si-foundations",
+         "si-fortifications",
+@@ -6499,6 +6877,10 @@
+ 
+       // Select folder
+       function selectFolder(folderKey, fromHistory = false) {
++        if (folderKey === "join-network") {
++          openPopup("popup-guestbook");
++          return;
++        }
+         selectedFolder = folderKey;
+         selectedColumnIndex = -1; // Reset column selection
+ 
+@@ -6529,6 +6911,21 @@
+         if (folderKey === "macintosh-hd") {
+           highestZIndex++;
+           finderWindow.style.zIndex = highestZIndex;
++          
++          if (window.innerWidth <= 768) {
++            // Move finder window to top of desktop
++            const desktop = document.getElementById("desktop");
++            const toggleContainer = desktop.querySelector(".toggle-container");
++            if (toggleContainer && toggleContainer.nextSibling) {
++              desktop.insertBefore(finderWindow, toggleContainer.nextSibling);
++            } else {
++              desktop.prepend(finderWindow);
++            }
++            // Add a small delay for smooth scrolling to take effect after DOM move
++            setTimeout(() => {
++              window.scrollTo({ top: 0, behavior: 'smooth' });
++            }, 50);
++          }
+         }
+ 
+         // Populate files (no longer opens popup for SB/SI - just shows folder contents)
+@@ -6636,11 +7033,13 @@
+ 
+       function isItemProtected(name) {
+         if (isSystemUnlocked) return false;
++        
++        const normalized = name.toLowerCase();
+         // Check if it's an open folder key (or spaced display name)
+-        if (OPEN_FOLDERS.has(name) || OPEN_FOLDERS.has(name.replace(" ", "-")))
++        if (OPEN_FOLDERS.has(normalized) || OPEN_FOLDERS.has(normalized.replace(/ /g, "-")))
+           return false;
+         // Check if it's an open file name
+-        if (OPEN_FILES.has(name)) return false;
++        if (OPEN_FILES.has(name) || OPEN_FILES.has(normalized)) return false;
+ 
+         // Check if it's an automotive or maritime listing
+         if (
+@@ -6672,6 +7071,7 @@
+         }
+       };
+ 
++
+       // Populate content based on view
+       function populateContent() {
+         let galleryScrollLeft = 0;
+@@ -6682,48 +7082,19 @@
+           galleryScrollLeft = filmstripContainer.scrollLeft;
+         }
+         if (!isSystemUnlocked && isItemProtected(selectedFolder)) {
+-          if (currentView === "icons") {
+-            contentArea.innerHTML = `
+-                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; height: 100%; box-sizing: border-box; text-align: center;">
+-                            <i class="fas fa-lock lock-icon" style="font-size: 40px; color: #636366; margin-bottom: 16px;"></i>
+-                            <h2 style="font-size: 16px; font-weight: 500; margin-bottom: 8px; color: #fff;">This folder is locked.</h2>
+-                            <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Enter password to unlock</p>
+-                            <input type="password" placeholder="••••••••" onkeypress="checkSystemPassword(event)" style="background: rgba(255,255,255,0.05); border: 1px solid #3a3a3c; border-radius: 8px; padding: 8px 12px; width: 100%; max-width: 180px; color: white; outline: none; font-family: 'Courier New', monospace; text-align: center; font-size: 14px;">
+-                        </div>
+-                    `;
+-          } else if (currentView === "gallery") {
+-            contentArea.innerHTML = `
+-                        <div class="gallery-view" style="display: flex; flex-direction: column; height: 100%;">
+-                            <div class="gallery-main" style="display: flex; flex: 1; min-height: 0; margin-bottom: 0;">
+-                                <div class="gallery-preview-area" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent;">
+-                                    <i class="fas fa-lock lock-icon" style="font-size: 48px; color: #636366; margin-bottom: 16px;"></i>
+-                                    <h2 style="font-size: 18px; font-weight: 500; margin-bottom: 8px; color: #fff;">This folder is locked.</h2>
+-                                    <p style="font-size: 13px; color: #888; margin-bottom: 24px;">Enter password to unlock</p>
+-                                    <input type="password" placeholder="••••••••" onkeypress="checkSystemPassword(event)" style="background: rgba(255,255,255,0.05); border: 1px solid #3a3a3c; border-radius: 8px; padding: 10px 14px; width: 100%; max-width: 200px; color: white; outline: none; font-family: 'Courier New', monospace; text-align: center; font-size: 14px;">
+-                                </div>
+-
+-                            </div>
+-                        </div>
+-                    `;
+-          } else {
+-            // List and Columns
+-            contentArea.innerHTML = `
+-                        <div class="column-view" style="height: 100%; display: flex; width: 100%; box-sizing: border-box; overflow: hidden;">
+-                            <div class="column" style="width: 200px; min-width: 200px; border-right: 1px solid #1a1a1a; background: #222; box-sizing: border-box;">
+-                                <!-- Left column intentionally left blank for lock screen -->
+-                            </div>
+-                            <div class="column-preview" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; padding: 20px; box-sizing: border-box; text-align: center; overflow: hidden;">
+-                                <i class="fas fa-lock lock-icon" style="font-size: 32px; color: #636366; margin-bottom: 12px;"></i>
+-                                <h2 style="font-size: 15px; font-weight: 500; margin-bottom: 6px; color: #fff;">This file is locked.</h2>
+-                                <p style="font-size: 11px; color: #888; margin-bottom: 16px; max-width: 100%;">Enter password</p>
+-                                <input type="password" placeholder="••••••••" onkeypress="checkSystemPassword(event)" style="background: transparent; border: 1px solid #3a3a3c; border-radius: 8px; padding: 6px 10px; width: 100%; max-width: 160px; color: white; outline: none; font-family: 'Courier New', monospace; text-align: center; font-size: 12px; box-sizing: border-box;">
+-                            </div>
+-                        </div>
+-                    `;
+-          }
++          contentArea.innerHTML = `
++              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; height: 100%; box-sizing: border-box; text-align: center; width: 100%;">
++                  <i class="fas fa-lock lock-icon" style="font-size: 40px; color: #636366; margin-bottom: 16px;"></i>
++                  <h2 style="font-size: 16px; font-weight: 500; margin-bottom: 8px; color: #fff;">This folder is locked.</h2>
++                  <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Enter password to unlock</p>
++                  <input type="password" placeholder="••••••••" onkeypress="checkSystemPassword(event)" style="background: rgba(255,255,255,0.05); border: 1px solid #3a3a3c; border-radius: 8px; padding: 8px 12px; width: 100%; max-width: 180px; color: white; outline: none; font-family: 'Courier New', monospace; text-align: center; font-size: 14px;">
++              </div>
++          `;
+           return;
+         }
+ 
++
++
+         if (selectedFolder === "curated") {
+           renderCuratedContent(contentArea);
+           return;
+@@ -6731,6 +7102,10 @@
+ 
+         const files = folderData[selectedFolder]?.files || [];
+ 
++        if (window.innerWidth <= 768 && (currentView === "columns" || currentView === "gallery")) {
++          currentView = "list";
++        }
++
+         if (currentView === "list") {
+           contentArea.innerHTML = `
+                     <div class="list-view">
+@@ -7092,7 +7467,7 @@
+                     <div class="gallery-view">
+                         <div class="gallery-main">
+                             <div class="gallery-preview">
+-                                <div class="gallery-preview-content" ondblclick="if(selectedFile) handleFileDoubleClick(selectedFile.name.replace(/\.png$/, ''))">
++                                <div class="gallery-preview-content" ondblclick="if(selectedFile) { if(selectedFile.type === 'folder') selectFolder(selectedFile.targetFolder); else handleFileDoubleClick(selectedFile.name.replace(/\\.png$/, '')); }">
+                                     ${previewContent}
+                                 </div>
+                             </div>
+@@ -7238,10 +7613,25 @@ ${
+               previewHtml = `<i class="${thumbIcon.class}" style="color: ${thumbIcon.color}"></i>`;
+             }
+ 
+-            thumb.innerHTML = previewHtml;
++            thumb.innerHTML = `
++              <div class="gallery-thumbnail-image-container">
++                ${previewHtml}
++              </div>
++              <div style="font-size: 9px; color: #fff; text-align: center; margin-top: 4px; width: 100%; padding: 0 2px; box-sizing: border-box; line-height: 1.2;">
++                ${file.name.replace(/\.png$/, "")}
++              </div>
++            `;
+             thumb.addEventListener("click", () => {
+-              selectedGalleryIndex = index;
+-              updateGalleryDOM(index);
++              if (window.innerWidth <= 768 && selectedGalleryIndex === index) {
++                  if (file.type === "folder") {
++                    selectFolder(file.targetFolder);
++                  } else {
++                    handleFileDoubleClick(file.name.replace(/\.png$/, ""));
++                  }
++              } else {
++                  selectedGalleryIndex = index;
++                  updateGalleryDOM(index);
++              }
+             });
+             thumb.addEventListener("dblclick", () => {
+               if (file.type === "folder") {
+@@ -7266,7 +7656,7 @@ ${
+ 
+       // Open finder window
+       function openFinderWindow(folderKey) {
+-        selectedFolder = folderKey || "cire-canon";
++        selectedFolder = folderKey || "macintosh-hd";
+         finderWindow.classList.add("active");
+ 
+         // Reset position to center to ensure it's always centered when opened
+@@ -7289,6 +7679,23 @@ ${
+         highestZIndex++;
+         finderWindow.style.zIndex = highestZIndex;
+ 
++        if (window.innerWidth <= 768) {
++          // Move finder window to top of desktop
++          const desktop = document.getElementById("desktop");
++          const toggleContainer = desktop.querySelector(".toggle-container");
++          if (toggleContainer && toggleContainer.nextSibling) {
++            desktop.insertBefore(finderWindow, toggleContainer.nextSibling);
++          } else {
++            desktop.prepend(finderWindow);
++          }
++          // Ensure cross-browser scrolling to top
++          setTimeout(() => {
++            window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
++            document.documentElement.scrollTop = 0;
++            document.body.scrollTop = 0;
++          }, 50);
++        }
++
+         populateSidebar();
+         populateContent();
+ 
+@@ -7318,6 +7725,9 @@ ${
+       // Event listeners for desktop folders (locked positions - no dragging)
+       document.querySelectorAll(".desktop-folder").forEach((folder) => {
+         folder.addEventListener("dblclick", (e) => {
++          if (window.isDesktopRevealed && window.isDesktopRevealed()) {
++            if (window.restoreDesktopWindows) window.restoreDesktopWindows();
++          }
+           e.preventDefault();
+           e.stopPropagation(); // Prevent wallpaper reveal from triggering
+ 
+@@ -7331,7 +7741,7 @@ ${
+           }
+ 
+           if (folder.id === "macintosh-hd") {
+-            openFinderWindow("cire-canon");
++            openFinderWindow("macintosh-hd");
+             return;
+           }
+ 
+@@ -7345,9 +7755,19 @@ ${
+           }
+         });
+ 
+-        // Prevent single click from doing anything (except selection if we add that later)
++        // Handle single click (selection on desktop, open on mobile)
+         folder.addEventListener("click", (e) => {
++          if (window.isDesktopRevealed && window.isDesktopRevealed()) {
++            if (window.restoreDesktopWindows) window.restoreDesktopWindows();
++          }
+           e.stopPropagation();
++          if (window.innerWidth <= 768) {
++            // On mobile, a single tap should open the folder
++            folder.dispatchEvent(new Event("dblclick"));
++          } else {
++            deselectAllFolders();
++            folder.classList.add("selected");
++          }
+         });
+       });
+ 
+@@ -7400,7 +7820,11 @@ ${
+       document.querySelectorAll(".view-menu-item").forEach((item) => {
+         item.addEventListener("click", (e) => {
+           e.stopPropagation();
+-          const view = item.dataset.view;
++          let view = item.dataset.view;
++          
++          if (window.innerWidth <= 768 && (view === "columns" || view === "gallery")) {
++            view = "list"; // Prevent switching to columns or gallery on mobile
++          }
+           currentView = view;
+ 
+           // Update menu selection
+@@ -7448,7 +7872,7 @@ ${
+       // Toggle toolbar tags menu
+       tagsBtn.addEventListener("click", (e) => {
+         e.stopPropagation();
+-        tagsMenu.classList.toggle("show");
++        // Functionality temporarily removed as requested
+       });
+ 
+       // Initialize toolbar tags
+@@ -7712,6 +8136,42 @@ ${
+ 
+       // Initialize
+       window.addEventListener("DOMContentLoaded", () => {
++        let launchDelay = 0;
++        if (window.innerWidth <= 768) {
++          currentView = "list";
++          const viewLabel = document.getElementById("view-label");
++          const viewIcon = document.getElementById("view-icon");
++          if (viewLabel) viewLabel.textContent = "List";
++          if (viewIcon) viewIcon.className = "fas fa-th-list";
++          
++          document.querySelectorAll(".view-menu-item").forEach(i => i.classList.remove("selected"));
++          const listBtn = document.querySelector('.view-menu-item[data-view="list"]');
++          if (listBtn) listBtn.classList.add("selected");
++
++          // Mobile Tutorial Animation
++          const forceTutorial = new URLSearchParams(window.location.search).has('tutorial');
++          if (forceTutorial || !sessionStorage.getItem("tutorial_played")) {
++            launchDelay = 3500;
++            sessionStorage.setItem("tutorial_played", "true");
++            const tutorialOverlay = document.getElementById("mobile-tutorial-overlay");
++            const stepTap = document.getElementById("tutorial-tap");
++            
++            if (tutorialOverlay && stepTap) {
++              tutorialOverlay.style.display = "flex";
++              stepTap.style.display = "flex";
++              stepTap.style.opacity = "1";
++              
++              // Hide after 3s
++              setTimeout(() => {
++                tutorialOverlay.style.opacity = "0";
++                setTimeout(() => {
++                  tutorialOverlay.style.display = "none";
++                }, 500);
++              }, 3000);
++            }
++          }
++        }
++
+         positionDesktopFolders();
+         generateCarousels();
+ 
+@@ -7720,10 +8180,11 @@ ${
+ 
+         // Open windows on launch
+         setTimeout(() => {
+-          openPopup("popup-maison");
+           openPopup("popup-transcendence");
+-          openPopup("popup-brilliance");
++          openPopup("popup-power-video");
+           openPopup("popup-ignorance");
++          openPopup("popup-brilliance");
++          openPopup("popup-maison");
+           openPopup("popup-guestbook"); // Unconditionally open Join Network
+ 
+           // Initialize draggable desktop folders
+@@ -7758,6 +8219,14 @@ ${
+             }
+           }
+ 
++          // 5-Second Scroll Restriction on Mobile
++          if (window.innerWidth <= 768) {
++            document.body.classList.add("scroll-locked");
++            setTimeout(() => {
++              document.body.classList.remove("scroll-locked");
++            }, 5000);
++          }
++
+           // Enforce Graphite Mode with 5s delay for Guestbook
+           setTimeout(() => {
+             const gbWindow = document.getElementById("popup-guestbook");
+@@ -7805,17 +8274,40 @@ ${
+                   c.style.pointerEvents = "auto";
+                   c.style.opacity = "1";
+                 });
++
++                // Normalise z-index to fall into standard layer hierarchy
++                highestZIndex++;
++                gbWindow.style.zIndex = highestZIndex;
+               }, 5000); // RESTORED TO 5000ms per user request
+             }
+           }, 100);
+-        }, 300);
++        }, launchDelay > 0 ? launchDelay : 300);
+       });
+ 
++      // Mobile Single-Tap to Open
++      document.addEventListener(
++        "click",
++        (e) => {
++          if (window.innerWidth <= 768) {
++            const target = e.target.closest("[ondblclick]");
++            if (target) {
++              if (target.getAttribute('data-mobile-clicked')) return;
++              target.setAttribute('data-mobile-clicked', 'true');
++              setTimeout(() => target.removeAttribute('data-mobile-clicked'), 500);
++
++              e.preventDefault();
++              target.dispatchEvent(new MouseEvent("dblclick", { bubbles: true, cancelable: true }));
++            }
++          }
++        },
++        true
++      );
++
+       // GLOBAL Z-INDEX HANDLER (Delegated)
+       document.addEventListener(
+         "mousedown",
+         (e) => {
+-          const popup = e.target.closest(".popup-window");
++          const popup = e.target.closest(".popup-window, .finder-window");
+           if (popup) {
+             if (parseInt(popup.style.zIndex) !== highestZIndex) {
+               highestZIndex++;
+@@ -7846,11 +8338,46 @@ ${
+           });
+         });
+ 
++        function restoreDesktopWindows() {
++          const allPopups = document.querySelectorAll(".popup-window.active");
++          const finderWin = document.getElementById("finder-window");
++          desktopRevealed = false;
++          allPopups.forEach((popup) => {
++            popup.style.transition = "left 0.4s ease, top 0.4s ease";
++            if (popup.dataset.preRevealLeft) {
++              popup.style.left = popup.dataset.preRevealLeft;
++              popup.style.top = popup.dataset.preRevealTop;
++              delete popup.dataset.preRevealTop;
++              delete popup.dataset.preRevealLeft;
++            } else {
++              highestZIndex++;
++              popup.style.zIndex = highestZIndex;
++            }
++          });
++          if (finderWin) {
++            if (finderWin.dataset.preRevealLeft) {
++              finderWin.style.left = finderWin.dataset.preRevealLeft;
++              finderWin.style.top = finderWin.dataset.preRevealTop;
++              delete finderWin.dataset.preRevealLeft;
++              delete finderWin.dataset.preRevealTop;
++            }
++          }
++          setTimeout(() => {
++            allPopups.forEach((p) => (p.style.transition = ""));
++            if (finderWin) finderWin.style.transition = "";
++          }, 500);
++        }
++        window.restoreDesktopWindows = restoreDesktopWindows;
++        window.isDesktopRevealed = () => desktopRevealed;
++
+         desktopEl.addEventListener("click", (e) => {
+           const folder = e.target.closest(".desktop-folder");
+ 
+-          // If clicking a folder, do NOT trigger desktop restore or reveal
++          // If clicking a folder, restore windows if desktop was revealed
+           if (folder) {
++            if (desktopRevealed) {
++              restoreDesktopWindows();
++            }
+             return;
+           }
+ 
+@@ -7892,37 +8419,14 @@ ${
+                 );
+               }
+             });
+-            if (finderWin && finderWin.style.display !== "none") {
++            if (finderWin && finderWin.classList.contains("active")) {
+               finderWin.dataset.preRevealLeft = finderWin.style.left;
+               finderWin.dataset.preRevealTop = finderWin.style.top;
+               finderWin.style.transition = "left 0.4s ease, top 0.4s ease";
+-              finderWin.style.left = window.innerWidth + 50 + "px";
++              finderWin.style.setProperty("left", window.innerWidth + 50 + "px", "important");
+             }
+           } else {
+-            desktopRevealed = false;
+-            allPopups.forEach((popup) => {
+-              popup.style.transition = "left 0.4s ease, top 0.4s ease";
+-              if (popup.dataset.preRevealLeft) {
+-                popup.style.left = popup.dataset.preRevealLeft;
+-                popup.style.top = popup.dataset.preRevealTop;
+-                delete popup.dataset.preRevealTop;
+-              }
+-
+-              // Do not re-center. Let it return to pre-reveal position or stay where it is.
+-            });
+-            if (finderWin) {
+-              if (finderWin.dataset.preRevealLeft) {
+-                finderWin.style.left = finderWin.dataset.preRevealLeft;
+-                finderWin.style.top = finderWin.dataset.preRevealTop;
+-                delete finderWin.dataset.preRevealLeft;
+-                delete finderWin.dataset.preRevealTop;
+-              }
+-              // Do not recenter finder window either.
+-            }
+-            setTimeout(() => {
+-              allPopups.forEach((p) => (p.style.transition = ""));
+-              if (finderWin) finderWin.style.transition = "";
+-            }, 500);
++            restoreDesktopWindows();
+           }
+         });
+       }
+@@ -8142,6 +8646,10 @@ ${
+             category === "automotive" ? "Exotic Vehicle" : "Yacht";
+ 
+           modal.style.display = "flex";
++          const bodyContainer = modal.querySelector('.product-detail-body-container');
++          if (bodyContainer) {
++            bodyContainer.scrollTop = 0;
++          }
+           setTimeout(() => modal.classList.add("visible"), 10);
+         } catch (e) {
+           console.error(e);
+@@ -8380,7 +8888,7 @@ ${
+         height: 100vh;
+         background: rgba(0, 0, 0, 0.8);
+         backdrop-filter: blur(20px);
+-        z-index: 10000;
++        z-index: 999999 !important;
+         justify-content: center;
+         align-items: center;
+         opacity: 0;
+@@ -8431,8 +8939,9 @@ ${
+           </button>
+         </div>
+         <div
++          class="product-detail-body-container"
+           style="
+-            padding: 40px;
++            padding: 20px 40px;
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+@@ -8445,13 +8954,14 @@ ${
+             style="
+               width: 100%;
+               max-width: 500px;
+-              height: auto;
++              height: 240px;
+               object-fit: contain;
+-              margin-bottom: 40px;
++              margin-bottom: 20px;
+               filter: contrast(1.1) brightness(1.1);
+             "
+           />
+           <div
++            class="product-detail-body"
+             style="
+               width: 100%;
+               display: flex;

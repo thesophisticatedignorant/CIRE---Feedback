@@ -69,7 +69,7 @@ export default function Window({
       onStart={handleStart}
       onDrag={handleDrag}
       onStop={handleStop}
-      disabled={graphiteMode} // Disable dragging in graphite mode
+      disabled={graphiteMode || id === "file-power-perfected-in-position-rfd"}
       bounds={bounds}
     >
       <div

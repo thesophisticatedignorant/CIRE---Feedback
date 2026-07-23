@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Large Media Files
+public/assets/SI-Spiral-Stream.mp4
+public/untitled.mp4

@@ -252,10 +252,12 @@ strong {
 
 .window-archive,
 .window-sophisticated-brilliance,
-.window-sophisticated-ignorance {
-  width: fit-content !important;
-  max-width: 500px;
-  min-width: 300px;
+.window-sophisticated-ignorance,
+.window-video,
+.window-file-power-perfected-in-position-rfd {
+  width: 350px !important;
+  height: 350px !important;
+  max-width: 90vw !important;
 }
 
 .window-master {
@@ -721,29 +723,33 @@ body.light-mode .finder-file-name {
 }
 
 .finder-gallery-info {
-  width: 220px;
+  width: 320px;
   background-color: rgba(35, 35, 35, 0.9);
-  padding: 15px;
+  padding: 20px;
   border-left: 1px solid rgba(255, 255, 255, 0.05);
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .finder-gallery-info-header {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 
 .finder-gallery-info-header i {
   font-size: 32px;
+  margin-top: 4px;
 }
 
 .finder-gallery-info-name {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: #fff;
   word-break: break-word;
+  line-height: 1.4;
+  margin-bottom: 4px;
 }
 
 .finder-gallery-info-type {
@@ -895,28 +901,32 @@ body.light-mode .finder-file-name {
 
 /* Gallery Thumbnails */
 .finder-gallery-thumbnails {
-  height: 80px;
+  height: 120px;
   background-color: rgba(30, 30, 30, 0.9);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   align-items: center;
   padding: 10px 20px;
-  gap: 10px;
+  gap: 15px;
   overflow-x: auto;
 }
 
 .finder-gallery-thumbnail {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: auto;
+  min-height: 85px;
   background-color: rgba(60, 60, 60, 0.8);
   border-radius: 6px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-top: 15px;
   cursor: pointer;
   flex-shrink: 0;
   border: 2px solid transparent;
   transition: border-color 0.2s;
+  padding: 5px;
 }
 
 .finder-gallery-thumbnail:hover {
@@ -1047,4 +1057,15 @@ body.lights-off::after {
   z-index: 600;
   /* Below light switch (606) but above windows? */
   /* Windows have z-index 1-5 usually. */
+}
+
+@media (max-width: 768px) {
+  .window-archive,
+  .window-sophisticated-brilliance,
+  .window-sophisticated-ignorance,
+  .window-video,
+  .window-file-power-perfected-in-position-rfd {
+    width: 300px !important;
+    height: 300px !important;
+  }
 }

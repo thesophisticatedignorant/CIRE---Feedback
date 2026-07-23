@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { db } from '../firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function NewsletterPopup({ onClose }) {
     const [email, setEmail] = useState('');
@@ -9,25 +11,16 @@ export default function NewsletterPopup({ onClose }) {
         setStatus('submitting');
 
         try {
-            const response = await fetch('http://localhost:3001/api/newsletter', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email,
-                    source: 'cire-join-network'
-                }),
+            await addDoc(collection(db, 'newsletter'), {
+                email,
+                source: 'cire-join-network',
+                timestamp: serverTimestamp()
             });
 
-            if (response.ok) {
-                setStatus('success');
-                setTimeout(() => {
-                    if (onClose) onClose();
-                }, 2000);
-            } else {
-                setStatus('error');
-            }
+            setStatus('success');
+            setTimeout(() => {
+                if (onClose) onClose();
+            }, 2000);
         } catch (error) {
             console.error('Submission error:', error);
             setStatus('error');
@@ -54,6 +47,7 @@ export default function NewsletterPopup({ onClose }) {
                 border: '1px solid #333',
                 borderRadius: '8px',
                 padding: '2rem',
+                paddingTop: '1rem', // Removed black empty space above
                 boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
                 position: 'relative'
             }}>

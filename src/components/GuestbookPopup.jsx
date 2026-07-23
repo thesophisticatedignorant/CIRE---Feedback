@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { db } from '../firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function GuestbookPopup({ onClose }) {
     const [formData, setFormData] = useState({
@@ -14,22 +16,15 @@ export default function GuestbookPopup({ onClose }) {
         setStatus('submitting');
 
         try {
-            const response = await fetch('http://localhost:3001/api/guestbook', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
+            await addDoc(collection(db, 'guestbook'), {
+                ...formData,
+                timestamp: serverTimestamp()
             });
 
-            if (response.ok) {
-                setStatus('success');
-                setTimeout(() => {
-                    if (onClose) onClose();
-                }, 2500);
-            } else {
-                setStatus('error');
-            }
+            setStatus('success');
+            setTimeout(() => {
+                if (onClose) onClose();
+            }, 2500);
         } catch (error) {
             console.error('Submission error:', error);
             setStatus('error');
@@ -72,7 +67,7 @@ export default function GuestbookPopup({ onClose }) {
                 backgroundColor: '#111',
                 border: '1px solid #333',
                 borderRadius: '8px',
-                padding: '2rem',
+                padding: '2rem 2rem 1rem 2rem',
                 boxShadow: '0 20px 50px rgba(0,0,0,0.8)',
                 position: 'relative'
             }}>
@@ -125,7 +120,7 @@ export default function GuestbookPopup({ onClose }) {
                         ENTRY RECORDED.<br/><br/>WELCOME TO THE NETWORK.
                     </div>
                 ) : (
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <input
                             type="text"
                             name="name"
@@ -133,7 +128,7 @@ export default function GuestbookPopup({ onClose }) {
                             value={formData.name}
                             onChange={handleChange}
                             required
-                            style={inputStyle}
+                            style={{...inputStyle, marginBottom: 0}}
                         />
                         <input
                             type="text"
@@ -142,7 +137,7 @@ export default function GuestbookPopup({ onClose }) {
                             value={formData.location}
                             onChange={handleChange}
                             required
-                            style={inputStyle}
+                            style={{...inputStyle, marginBottom: 0}}
                         />
                         <input
                             type="email"
@@ -151,7 +146,7 @@ export default function GuestbookPopup({ onClose }) {
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            style={inputStyle}
+                            style={{...inputStyle, marginBottom: 0}}
                         />
                         <textarea
                             name="message"
@@ -159,9 +154,10 @@ export default function GuestbookPopup({ onClose }) {
                             value={formData.message}
                             onChange={handleChange}
                             required
-                            rows={4}
+                            rows={3}
                             style={{
                                 ...inputStyle,
+                                marginBottom: 0,
                                 resize: 'none'
                             }}
                         />
@@ -170,7 +166,7 @@ export default function GuestbookPopup({ onClose }) {
                             disabled={status === 'submitting'}
                             style={{
                                 width: '100%',
-                                padding: '14px',
+                                padding: '12px',
                                 backgroundColor: '#fff',
                                 color: '#000',
                                 border: 'none',
@@ -180,13 +176,13 @@ export default function GuestbookPopup({ onClose }) {
                                 cursor: status === 'submitting' ? 'wait' : 'pointer',
                                 opacity: status === 'submitting' ? 0.7 : 1,
                                 letterSpacing: '1px',
-                                marginTop: '0.5rem'
+                                marginTop: '5px'
                             }}
                         >
                             {status === 'submitting' ? 'SUBMITTING...' : 'SIGN GUESTBOOK'}
                         </button>
                         {status === 'error' && (
-                            <p style={{ color: '#ef4444', textAlign: 'center', marginTop: '1rem', fontSize: '0.875rem' }}>
+                            <p style={{ color: '#ef4444', textAlign: 'center', marginTop: '5px', fontSize: '0.875rem' }}>
                                 Connection failed. Please try again.
                             </p>
                         )}

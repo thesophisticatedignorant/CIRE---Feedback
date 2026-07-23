@@ -28,7 +28,7 @@ export default function Folder({ x, y, label, style, onClick, color = "#007aff",
                 flexDirection: 'column',
                 alignItems: 'center',
                 cursor: 'pointer',
-                width: '80px',
+                width: '70px',
                 textAlign: 'center',
                 zIndex: isDraggable ? 1 : undefined,
                 ...style
@@ -36,8 +36,8 @@ export default function Folder({ x, y, label, style, onClick, color = "#007aff",
             onClick={!isDraggable ? onClick : undefined}
         >
             <svg
-                width="48"
-                height="48"
+                width="40"
+                height="40"
                 viewBox="0 0 24 24"
                 fill={color === "red" ? "#ff3b30" : color}
                 xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +51,7 @@ export default function Folder({ x, y, label, style, onClick, color = "#007aff",
                     // Let's assume white for desktop (draggable) and black for finder (window) unless window bg is dark.
                     // Actually, window bg is #2b2b2b (dark), so white text is good.
                     textShadow: isDraggable ? '0 1px 2px rgba(0,0,0,0.8)' : 'none',
-                    fontSize: '12px',
+                    fontSize: '11px',
                     fontWeight: '500',
                     lineHeight: '1.2',
                     fontFamily: 'system-ui, -apple-system, sans-serif'

@@ -14,8 +14,8 @@ const getInitialWindows = () => {
       id: "archive",
       title: "Maison Overview",
       contentKey: "archive",
-      x: centerX - 250, // Centered (was -241)
-      y: 18,
+      x: centerX - 27, // Positioned at Mouse X: 1033 (right edge) for Maison Overview
+      y: 51,
       minimized: false,
       zIndex: 2,
       layoutVersion: version,
@@ -70,6 +70,22 @@ const getInitialWindows = () => {
       graphiteMode: false,
       preGraphiteState: null,
     },
+    {
+      id: "file-power-perfected-in-position-rfd",
+      title: "power perfected in position.rfd",
+      contentKey: "file-viewer",
+      fileData: {
+        fileName: 'power perfected in position.rfd',
+        filePath: '/power perfected in position.rfd'
+      },
+      x: window.innerWidth > 768 ? window.innerWidth / 2 : centerX - 150,
+      y: 50,
+      minimized: false,
+      zIndex: 1, // Behind the text windows which are 2, 3, 4
+      layoutVersion: version,
+      graphiteMode: false,
+      preGraphiteState: null,
+    }
   ];
 };
 
@@ -79,6 +95,7 @@ export function WindowManagerProvider({ children }) {
   const [isSubscribePopupOpen, setIsSubscribePopupOpen] = useState(false);
   const [isGuestbookOpen, setIsGuestbookOpen] = useState(false);
   const [isCuratedContentOpen, setIsCuratedContentOpen] = useState(false);
+  const [isPrivacyPolicyOpen, setIsPrivacyPolicyOpen] = useState(false);
 
   useEffect(() => {
     let lastWidth = window.innerWidth;
@@ -299,6 +316,8 @@ export function WindowManagerProvider({ children }) {
     toggleGuestbook: (isOpen) => setIsGuestbookOpen(isOpen),
     isCuratedContentOpen,
     toggleCuratedContent: (isOpen) => setIsCuratedContentOpen(isOpen),
+    isPrivacyPolicyOpen,
+    togglePrivacyPolicy: (isOpen) => setIsPrivacyPolicyOpen(isOpen),
     openMasterWithFolder: (folderKey) => {
       setSelectedFolder(folderKey);
       // Open and focus the master window
