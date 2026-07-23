@@ -10102,7 +10102,7 @@
     </script>
 
     <!-- HARDCODED COOKIE BANNER -->
-    <div id="site-footer-message-bar" style="position: fixed !important; bottom: 0 !important; left: 0 !important; width: 100vw !important; background-color: rgba(28, 28, 28, 0.95) !important; color: #a0a0a0 !important; padding: 1rem 2rem !important; font-size: 0.75rem !important; font-family: monospace !important; border-top: 1px solid #333 !important; z-index: 2147483647 !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; align-items: center !important; box-shadow: 0 -10px 30px rgba(0,0,0,0.5) !important; backdrop-filter: blur(10px) !important; box-sizing: border-box !important;">
+    <div id="site-footer-message-bar" style="position: fixed !important; bottom: 0 !important; left: 0 !important; width: 100vw !important; background-color: rgba(28, 28, 28, 0.95) !important; color: #a0a0a0 !important; padding: 1rem 2rem !important; font-size: 0.75rem !important; font-family: monospace !important; border-top: 1px solid #333 !important; z-index: 2147483647 !important; display: none !important; opacity: 0; transition: opacity 1s; flex-direction: column !important; justify-content: space-between !important; align-items: center !important; box-shadow: 0 -10px 30px rgba(0,0,0,0.5) !important; backdrop-filter: blur(10px) !important; box-sizing: border-box !important;">
       <div style="margin-bottom: 1rem; width: 100%; text-align: center;">
         <p style="margin: 0; line-height: 1.5; color: #a0a0a0 !important; font-family: monospace !important; font-size: 0.75rem !important;">
           CIRE uses third-party cookies and other non-essential trackers for statistical analysis, to personalize your experience, and for advertising and social media purposes, including to track your use of our site, offer you advertisements that target your particular interests, improve our services, assist you more efficiently when browsing on our website and analyze the performance of our advertising campaigns. If you want more information about the trackers used, and your rights, read our 
@@ -10161,10 +10161,17 @@
         if (!forceBanner && localStorage.getItem('cire_cookie_consent_v5')) {
           banner.style.setProperty('display', 'none', 'important');
         } else {
+          // Delay appearance by 30 seconds (or immediately if debugging)
+          const delay = forceBanner ? 0 : 30000;
+          setTimeout(() => {
+            banner.style.setProperty('display', 'flex', 'important');
+            setTimeout(() => banner.style.opacity = '1', 50);
+          }, delay);
+
           document.getElementById('site-ack-btn').addEventListener('click', async function() {
             localStorage.setItem('cire_cookie_consent_v5', 'granted');
             banner.style.opacity = '0';
-            setTimeout(() => banner.style.setProperty('display', 'none', 'important'), 300);
+            setTimeout(() => banner.style.setProperty('display', 'none', 'important'), 1000);
             
             // Consent specific logging
             try {
