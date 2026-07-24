@@ -1157,35 +1157,37 @@
         gap: 16px;
         height: 100%;
         width: max-content;
+        -webkit-animation: scroll 40s linear infinite;
         animation: scroll 40s linear infinite;
+        will-change: transform;
       }
 
       .carousel-track:hover {
         animation-play-state: paused;
+        -webkit-animation-play-state: paused;
       }
 
       .carousel-track-reverse {
+        -webkit-animation: scroll-reverse 40s linear infinite;
         animation: scroll-reverse 40s linear infinite;
       }
 
+      @-webkit-keyframes scroll {
+        0% { -webkit-transform: translateX(0); transform: translateX(0); }
+        100% { -webkit-transform: translateX(-50%); transform: translateX(-50%); }
+      }
       @keyframes scroll {
-        0% {
-          transform: translateX(0);
-        }
-
-        100% {
-          transform: translateX(-50%);
-        }
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
       }
 
+      @-webkit-keyframes scroll-reverse {
+        0% { -webkit-transform: translateX(-50%); transform: translateX(-50%); }
+        100% { -webkit-transform: translateX(0); transform: translateX(0); }
+      }
       @keyframes scroll-reverse {
-        0% {
-          transform: translateX(-50%);
-        }
-
-        100% {
-          transform: translateX(0);
-        }
+        0% { transform: translateX(-50%); }
+        100% { transform: translateX(0); }
       }
 
       .carousel-item {
@@ -2387,14 +2389,22 @@
           transform: none !important;
           width: 100vw !important;
           padding-bottom: 10px !important;
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 2px !important;
         }
         .carousel-track-wrapper {
           height: 75px !important; /* Scaled down height to fit both securely */
           padding: 5px 0 !important;
+          position: relative !important;
         }
         .carousel-item {
           flex: 0 0 100px !important; /* Scaled down width */
           font-size: 0.8rem !important; /* Scaled down text */
+        }
+        .carousel-track:hover {
+          animation-play-state: running !important;
+          -webkit-animation-play-state: running !important;
         }
       }
     </style>
