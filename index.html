@@ -10530,16 +10530,18 @@
         const forceBanner = urlParams.get('forceBanner') === 'true';
         const banner = document.getElementById('site-footer-message-bar');
         
-        if (!forceBanner && localStorage.getItem('cire_cookie_consent_v6')) {
+        if (!forceBanner && localStorage.getItem('cire_cookie_consent_v7')) {
           banner.style.setProperty('display', 'none', 'important');
         } else {
+          // Delay appearance by 30 seconds (or immediately if debugging)
+          const delay = forceBanner ? 0 : 30000;
           setTimeout(() => {
             banner.style.setProperty('display', 'flex', 'important');
             setTimeout(() => banner.style.setProperty('opacity', '1', 'important'), 50);
-          }, 1000);
+          }, delay);
 
           document.getElementById('site-ack-btn').addEventListener('click', async function() {
-            localStorage.setItem('cire_cookie_consent_v6', 'granted');
+            localStorage.setItem('cire_cookie_consent_v7', 'granted');
             banner.style.setProperty('opacity', '0', 'important');
             setTimeout(() => banner.style.setProperty('display', 'none', 'important'), 1000);
             
