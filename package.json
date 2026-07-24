@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "concurrently": "^8.2.2",
@@ -20,10 +21,11 @@
     "express": "^4.19.2",
     "firebase": "^12.16.0",
     "html-validator": "^6.0.1",
-    "jimp": "^1.6.0",
+    "jimp": "^1.6.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-draggable": "^4.5.0",
+    "sharp": "^0.35.3",
     "three": "^0.182.0"
   },
   "devDependencies": {

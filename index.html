@@ -3,8 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CIRE</title>
+    <title>CIRE Conglomerate | The Pinnacle of Luxury</title>
+    <meta name="description" content="Discover the CIRE ecosystem. Explore our exclusive automotive and maritime concierge services, showcasing the absolute pinnacle of luxury and performance." />
     <meta name="google" content="notranslate" />
+    <link rel="canonical" href="https://cireconglomerate.com" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://cireconglomerate.com" />
+    <meta property="og:title" content="CIRE Conglomerate | The Pinnacle of Luxury" />
+    <meta property="og:description" content="Discover the CIRE ecosystem. Explore our exclusive automotive and maritime concierge services, showcasing the absolute pinnacle of luxury and performance." />
+    <meta property="og:image" content="https://cireconglomerate.com/CIRE%20Logo%20BWwoBG.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://cireconglomerate.com" />
+    <meta property="twitter:title" content="CIRE Conglomerate | The Pinnacle of Luxury" />
+    <meta property="twitter:description" content="Discover the CIRE ecosystem. Explore our exclusive automotive and maritime concierge services, showcasing the absolute pinnacle of luxury and performance." />
+    <meta property="twitter:image" content="https://cireconglomerate.com/CIRE%20Logo%20BWwoBG.png" />
     <link rel="icon" type="image/png" href="/CC V6.png" />
     <link
       rel="stylesheet"
@@ -15,7 +31,7 @@
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="/blustreet_data.js"></script>
+    <script src="/concierge_inventory.js"></script>
     <script type="module" src="/firebase_setup.js"></script>
     <style>
       .wwn-tooltip {
@@ -423,6 +439,7 @@
         color: #fff;
         word-break: normal;
         overflow-wrap: normal;
+        width: 100%;
         text-align: center;
       }
 
@@ -1018,6 +1035,23 @@
         text-overflow: ellipsis;
         text-align: center;
         user-select: none;
+      }
+
+      .popup-share-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #636366;
+        font-size: 11px;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .popup-share-icon:hover {
+        color: #888;
       }
 
       .popup-content {
@@ -2062,8 +2096,29 @@
           width: 8px;
           height: 8px;
           border-radius: 50%;
+          background: white;
           border: 1px solid white;
           box-sizing: border-box;
+        }
+
+        #site-footer-message-bar {
+          flex-direction: column !important;
+          padding: 1rem !important;
+          text-align: center !important;
+          gap: 1rem !important;
+        }
+        #site-footer-message-bar > div:first-child p {
+          font-size: 0.65rem !important;
+        }
+
+        /* Restore mobile reveal animation */
+        #lock-screen {
+          display: flex !important;
+        }
+        
+        .product-card-modal, .popup-window {
+          height: 100dvh !important;
+          padding-bottom: env(safe-area-inset-bottom, 20px) !important;
         }
 
         .finger-icon {
@@ -3723,7 +3778,7 @@
         </div>
         <div class="popup-content" style="padding: 0">
           <video
-            autoplay
+            preload="none"
             loop
             muted
             playsinline
@@ -3764,7 +3819,7 @@
         </div>
         <div class="popup-content" style="padding: 0">
           <video
-            autoplay
+            preload="none"
             loop
             muted
             playsinline
@@ -3845,7 +3900,7 @@
           <span class="popup-title">POWER PERFECTED IN POSITION</span>
         </div>
         <div class="popup-content" style="padding: 0; display: flex; align-items: center; justify-content: center; background: black;">
-          <video src="/assets/SI-Spiral-Stream.mp4" autoplay loop muted playsinline style="width: 100%; height: auto; display: block; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"></video>
+          <video src="/assets/SI-Spiral-Stream.mp4" preload="none" loop muted playsinline style="width: 100%; height: auto; display: block; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"></video>
         </div>
       </div>
 
@@ -4353,10 +4408,10 @@
               onclick="toggleGraphiteMode('popup-collection-overview')"
             ></div>
           </div>
-          <span class="popup-title">COLLECTION OVERVIEW</span>
+          <span class="popup-title">COLLECTION NARRATIVE</span>
         </div>
         <div class="popup-content">
-          <h1>Collection Overview</h1>
+          <h1>Collection Narrative</h1>
           <p style="text-indent: 2em">
             The debut collection from
             <em>Sophisticated Brilliance</em> reinterprets sacred iconography as
@@ -5562,6 +5617,7 @@
               name: "renderings",
               type: "folder",
               targetFolder: "tom-renderings",
+              protected: true,
             },
             { name: "final", type: "folder", targetFolder: "tom-final" },
             {
@@ -5727,8 +5783,8 @@
         },
       };
 
-      if (window.BLUSTREET_DATA) {
-        folderData["concierge-automotive"].files = window.BLUSTREET_DATA.filter(
+      if (window.CONCIERGE_INVENTORY) {
+        folderData["concierge-automotive"].files = window.CONCIERGE_INVENTORY.filter(
           (d) => d.category === "automotive",
         ).map((d) => ({
           name: d.name,
@@ -5736,7 +5792,7 @@
           src: d.image,
           tags: d.requirements || [],
         }));
-        folderData["concierge-maritime"].files = window.BLUSTREET_DATA.filter(
+        folderData["concierge-maritime"].files = window.CONCIERGE_INVENTORY.filter(
           (d) => d.category === "maritime",
         ).map((d) => ({
           name: d.name,
@@ -5937,6 +5993,12 @@
 
           // Show popup
           popup.classList.add("active");
+
+          // Play any video inside the popup
+          const vid = popup.querySelector('video');
+          if (vid) {
+            vid.play().catch(e => console.log("Video play prevented", e));
+          }
           
           if (window.innerWidth <= 768) {
             // Move popup to top of desktop
@@ -6064,6 +6126,12 @@
           popup.classList.remove("active");
           popup.classList.remove("graphite-mode"); // Exit fullscreen
           window.history.pushState({}, '', window.location.pathname);
+
+          // Pause any video inside the popup
+          const vid = popup.querySelector('video');
+          if (vid) {
+            vid.pause();
+          }
 
           // Remove from dock if present
           const dockItem = document.querySelector(
@@ -6208,7 +6276,7 @@
             return;
         }
 
-        if (window.innerWidth <= 768 && selectedColumnIndex === index) {
+        if (window.innerWidth <= 768) {
             if (selectedFile) {
                 if (selectedFile.type === "folder") {
                     selectFolder(selectedFile.targetFolder);
@@ -6262,9 +6330,9 @@
                     </div>
                 `;
         } else if (selectedFile?.type === "image" && selectedFile?.src) {
-          previewContent = `<img src="${selectedFile.src}" style="max-width: 100%; max-height: 100%; object-fit: contain; background: #1a1a1a;">`;
+          previewContent = `<img src="${selectedFile.src}" style="width: 100%; height: 100%; object-fit: contain; background: #1a1a1a;">`;
         } else if (selectedFile?.type === "video" && selectedFile?.src) {
-          previewContent = `<video src="${selectedFile.src}" style="max-width: 100%; max-height: 100%; object-fit: contain;" autoplay muted loop playsinline></video>`;
+          previewContent = `<video src="${selectedFile.src}" style="width: 100%; height: 100%; object-fit: contain;" autoplay muted loop playsinline></video>`;
 
         } else if (selectedFile) {
           previewContent = `<i class="${selectedIcon.class}" style="font-size: 64px; color: ${selectedIcon.color}"></i>`;
@@ -6394,7 +6462,7 @@
         const clickedFile = currentFiles[index];
 
         if (clickedFile) {
-          if (window.innerWidth <= 768 && selectedColumnIndex === index) {
+          if (window.innerWidth <= 768) {
             if (clickedFile.type === "folder") {
                 selectFolder(clickedFile.targetFolder);
             } else {
@@ -6549,8 +6617,13 @@
         }
 
         // SB Logo video trigger
-        if (fileName === "logo.mp4") {
+        if (fileName === "logo.mp4" || fileName === "collection 1 logo.mp4") {
           openPopup("popup-sb-logo");
+          return;
+        }
+
+        if (fileName === "collection narrative.rfd") {
+          openPopup("popup-collection-overview");
           return;
         }
 
@@ -6563,7 +6636,7 @@
           (f) => f.name.replace(/\.png$/, "") === baseName,
         );
         if (autoFile || maritimeFile) {
-          const productData = window.BLUSTREET_DATA?.find(
+          const productData = window.CONCIERGE_INVENTORY?.find(
             (d) => d.name === fileName || d.name + ".png" === fileName,
           );
           if (productData) {
@@ -6623,14 +6696,14 @@
         popup.innerHTML = `
                 <div class="popup-titlebar">
                     <div class="popup-controls">
-                        <span class="popup-control share-btn" style="cursor:pointer; margin-right:8px;" title="Share Link" onclick="copyShareUrl('file', '${title}', this)">🔗</span>
                         <span class="popup-control close" onclick="closeImagePopup('${popupId}')"></span>
                         <span class="popup-control minimize" onclick="minimizePopup('${popupId}')"></span>
                         <span class="popup-control maximize" onclick="toggleGraphiteMode('${popupId}')"></span>
                     </div>
                     <span class="popup-title">${title}</span>
+                    <span class="popup-share-icon" title="Share Link" onclick="copyShareUrl('file', '${title}', this)"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
                 </div>
-                <div class="popup-content" style="padding: 0; background: #1a1a1a;">
+                <div class="popup-content" style="padding: 0; background: #1a1a1a; display: flex; align-items: center; justify-content: center;">
                     ${mediaHtml}
                 </div>
             `;
@@ -6638,8 +6711,41 @@
         // Remove padding-bottom
         popup.style.paddingBottom = "0px";
 
-        if (!isVideo) {
-            // Apply uniform dimensions for sketch images using object-fit contain to prevent cutoff
+        if (title.toLowerCase().startsWith("sketch")) {
+            const titleLower = title.toLowerCase();
+            const isGroup1 = titleLower.includes("humble") || titleLower.includes("metamorphosis") || titleLower.includes("beast");
+            const isGroup2 = titleLower.includes("nails") || titleLower.includes("celestial scars");
+            
+            if (isGroup1) {
+                popup.style.width = "450px";
+                popup.style.height = "600px";
+                const popupContent = popup.querySelector('.popup-content');
+                if (popupContent) {
+                  popupContent.style.background = "#fff";
+                }
+            } else if (isGroup2) {
+                popup.style.width = "600px";
+                popup.style.height = "628px";
+                const popupContent = popup.querySelector('.popup-content');
+                if (popupContent) {
+                  popupContent.style.background = "#fff";
+                }
+            } else {
+                popup.style.width = "400px";
+                popup.style.height = "550px";
+            }
+
+            const img = popup.querySelector("img");
+            if (img) {
+                img.style.width = "100%";
+                img.style.height = "100%";
+                img.style.objectFit = isGroup2 ? "contain" : "cover";
+                img.style.display = "block";
+            }
+        }
+
+        if (!isVideo && !title.toLowerCase().startsWith("sketch")) {
+            // Apply uniform dimensions for non-sketch images using object-fit contain to prevent cutoff
             const img = popup.querySelector('img');
             if (img) {
                 img.style.width = "100%";
@@ -6654,8 +6760,22 @@
         popup.style.top = "100px";
         popup.style.width = "320px";
 
-        document.body.appendChild(popup);
-
+        if (window.innerWidth <= 768) {
+            const desktop = document.getElementById("desktop");
+            const toggleContainer = desktop.querySelector(".toggle-container");
+            if (toggleContainer && toggleContainer.nextSibling) {
+              desktop.insertBefore(popup, toggleContainer.nextSibling);
+            } else {
+              desktop.prepend(popup);
+            }
+            setTimeout(() => {
+              window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+              document.documentElement.scrollTop = 0;
+              document.body.scrollTop = 0;
+            }, 50);
+        } else {
+            document.body.appendChild(popup);
+        }
         // Make draggable
         makeDraggable(popup);
 
@@ -7026,8 +7146,7 @@
         "join-network",
         "sophisticated-brilliance",
         "video",
-        "tom-sketches",
-        "tom-renderings"
+        "tom-sketches"
       ]);
 
       const OPEN_FILES = new Set([
@@ -7133,7 +7252,7 @@
                             let previewHtml;
 
                             if (file.type === "image" && file.src) {
-                              previewHtml = `<img src="${file.src}" style="width: 20px; height: 20px; object-fit: contain; margin-right: 10px;">`;
+                              previewHtml = `<div style="display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; margin-right: 10px;"><img src="${file.src}" style="width: 100%; height: 100%; object-fit: contain;"></div>`;
                             } else if (file.type === "video" && file.src) {
                               previewHtml = `<video src="${file.src}#t=0.1" style="width: 20px; height: 20px; object-fit: cover; border-radius: 2px; margin-right: 10px;" muted playsinline onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0;"></video>`;
                             } else if (
@@ -7179,7 +7298,7 @@
                             let previewHtml;
 
                             if (file.type === "image" && file.src) {
-                              previewHtml = `<img src="${file.src}" style="width: 64px; height: 64px; object-fit: contain; margin-bottom: 10px;">`;
+                              previewHtml = `<div style="display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; margin-bottom: 10px;"><img src="${file.src}" style="width: 100%; height: 100%; object-fit: contain;"></div>`;
                             } else if (file.type === "video" && file.src) {
                               previewHtml = `<video src="${file.src}#t=0.1" style="width: 64px; height: 64px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;" muted playsinline onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0;"></video>`;
                             } else if (
@@ -7244,9 +7363,9 @@
                         </div>
                     `;
           } else if (selectedFile?.type === "image" && selectedFile?.src) {
-            previewContent = `<img src="${selectedFile.src}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+            previewContent = `<img src="${selectedFile.src}" style="width: 100%; height: 100%; object-fit: contain;">`;
           } else if (selectedFile?.type === "video" && selectedFile?.src) {
-            previewContent = `<video src="${selectedFile.src}" style="max-width: 100%; max-height: 100%; object-fit: contain;" autoplay muted loop playsinline></video>`;
+            previewContent = `<video src="${selectedFile.src}" style="width: 100%; height: 100%; object-fit: contain;" autoplay muted loop playsinline></video>`;
           } else if (selectedFile) {
             previewContent = `<i class="${selectedIcon.class}" style="font-size: 64px; color: ${selectedIcon.color}"></i>`;
           }
@@ -7260,7 +7379,7 @@
                                 let itemPreviewHtml;
 
                                 if (file.type === "image" && file.src) {
-                                  itemPreviewHtml = `<img src="${file.src}" style="width: 20px; height: 20px; object-fit: contain; margin-right: 10px;">`;
+                                  itemPreviewHtml = `<div style="display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; margin-right: 10px;"><img src="${file.src}" style="width: 100%; height: 100%; object-fit: contain;"></div>`;
                                 } else if (file.type === "video" && file.src) {
                                   itemPreviewHtml = `<video src="${file.src}#t=0.1" style="width: 20px; height: 20px; object-fit: cover; border-radius: 2px; margin-right: 10px;" muted playsinline></video>`;
                                 } else if (
@@ -7427,14 +7546,14 @@
           } else if (selectedFile?.type === "image" && selectedFile?.src) {
             previewContent = `<img src="${
               selectedFile.src
-            }" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px;" ondblclick="handleFileDoubleClick('${selectedFile.name.replace(
+            }" style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;" ondblclick="handleFileDoubleClick('${selectedFile.name.replace(
               /\\.png$/,
               "",
             )}')">`;
           } else if (selectedFile?.type === "video" && selectedFile?.src) {
             previewContent = `<video src="${
               selectedFile.src
-            }" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px;" autoplay muted loop playsinline ondblclick="handleFileDoubleClick('${selectedFile.name.replace(
+            }" style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;" autoplay muted loop playsinline ondblclick="handleFileDoubleClick('${selectedFile.name.replace(
               /\\.png$/,
               "",
             )}')"></video>`;
@@ -7692,8 +7811,6 @@
           // Ensure cross-browser scrolling to top
           setTimeout(() => {
             window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-            document.documentElement.scrollTop = 0;
-            document.body.scrollTop = 0;
           }, 50);
         }
 
@@ -8150,8 +8267,12 @@
         const folderParam = urlParams.get('folder');
         const fileParam = urlParams.get('file');
         const listingParam = urlParams.get('listing');
+        const refParam = urlParams.get('ref');
         const hasFolderLink = folderParam !== null;
-        const hasFileLink = fileParam !== null || listingParam !== null;
+        const hasFileLink = fileParam !== null || listingParam !== null || refParam !== null;
+
+        const forceTutorial = new URLSearchParams(window.location.search).has('tutorial');
+        let shouldDelay = !hasFolderLink && !hasFileLink;
 
         let launchDelay = 0;
         if (window.innerWidth <= 768) {
@@ -8166,10 +8287,8 @@
           if (listBtn) listBtn.classList.add("selected");
 
           // Mobile Tutorial Animation
-          const forceTutorial = new URLSearchParams(window.location.search).has('tutorial');
-          if (forceTutorial || !sessionStorage.getItem("tutorial_played")) {
+          if (shouldDelay) {
             launchDelay = 3500;
-            sessionStorage.setItem("tutorial_played", "true");
             const tutorialOverlay = document.getElementById("mobile-tutorial-overlay");
             const stepTap = document.getElementById("tutorial-tap");
             
@@ -8202,13 +8321,30 @@
           openPopup("popup-ignorance");
           openPopup("popup-brilliance");
           openPopup("popup-maison");
-          if (!hasFolderLink && !hasFileLink) {
+          if (shouldDelay) {
             openPopup("popup-guestbook"); // Unconditionally open Join Network on normal loads
           }
 
           // Initialize draggable desktop folders
           document.querySelectorAll(".desktop-folder").forEach((folder) => {
             makeDesktopDraggable(folder);
+          });
+
+          // Dynamically add share buttons to all static popups
+          document.querySelectorAll('.popup-window').forEach(popup => {
+              if (popup.id !== 'popup-inquiry' && popup.id !== 'popup-restricted' && popup.id !== 'popup-coming-soon' && popup.id !== 'popup-guestbook') {
+                  const titlebar = popup.querySelector('.popup-titlebar');
+                  if (titlebar && !titlebar.querySelector('.popup-share-icon')) {
+                      const titleSpan = titlebar.querySelector('.popup-title');
+                      const title = titleSpan ? titleSpan.textContent : popup.id;
+                      const shareBtn = document.createElement('span');
+                      shareBtn.className = 'popup-share-icon';
+                      shareBtn.title = 'Share Link';
+                      shareBtn.onclick = function() { copyShareUrl('file', title, this); };
+                      shareBtn.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i>';
+                      titlebar.appendChild(shareBtn);
+                  }
+              }
           });
 
           // Position all popups after opening
@@ -8230,7 +8366,7 @@
               blocker.style.cursor = "wait";
               titlebar.appendChild(blocker);
 
-              if (!hasFolderLink && !hasFileLink) {
+              if (shouldDelay) {
                 setTimeout(() => {
                   if (titlebar.contains(blocker)) {
                     titlebar.removeChild(blocker);
@@ -8245,7 +8381,7 @@
           // 5-Second Scroll Restriction on Mobile
           if (window.innerWidth <= 768) {
             document.body.classList.add("scroll-locked");
-            if (!hasFolderLink && !hasFileLink) {
+            if (shouldDelay) {
               setTimeout(() => {
                 document.body.classList.remove("scroll-locked");
               }, 5000);
@@ -8584,7 +8720,7 @@
                 <div class="loader" style="border: 2px solid #333; border-top: 2px solid #fff; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite;"></div>
             </div>`;
         try {
-          const res = await fetch("/src/blustreet_data.json");
+          const res = await fetch("/src/concierge_inventory.json");
           const data = await res.json();
           const category =
             folderKey === "concierge-automotive" ? "automotive" : "maritime";
@@ -8595,7 +8731,7 @@
             const imgSrc = item.image;
             html += `
                         <div class="product-card" onclick="openProductDetail(${index}, '${category}')" style="background: rgba(28, 28, 30, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; cursor: pointer; transition: transform 0.2s, background 0.2s; display: flex; flex-direction: column; align-items: center; text-align: center;">
-                            <img src="${imgSrc}" style="width: 100%; height: 130px; object-fit: contain; margin-bottom: 20px; filter: contrast(1.1) brightness(1.1); ">
+                            <img src="${imgSrc}" loading="lazy" style="width: 100%; height: 130px; object-fit: contain; margin-bottom: 20px; filter: contrast(1.1) brightness(1.1); ">
                             <h3 style="color: #fff; font-size: 15px; font-weight: 500; margin: 0 0 8px 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">${item.name}</h3>
                             
                         </div>
@@ -8645,6 +8781,7 @@
             "plus-lighter";
           document.getElementById("pd-image").style.filter =
             "contrast(1.1) brightness(1.1)";
+          document.getElementById("pd-image").style.objectFit = "contain";
           document.getElementById("pd-title").innerText = item.name;
           document.getElementById("pd-desc").innerText =
             item.description || "Description not available.";
@@ -8720,6 +8857,7 @@
         document.getElementById("product-detail-modal").style.display = "none";
         const modal = document.getElementById("inquiry-form-modal");
         modal.style.display = "flex";
+        modal.style.zIndex = "99999999";
         setTimeout(() => modal.classList.add("visible"), 10);
 
         const category = window.currentShowroomData[0]?.category;
@@ -8980,7 +9118,6 @@
           <div style="display: flex; gap: 1rem; align-items: center;">
             <button
               id="pd-share-btn"
-              onclick="copyShareLink()"
               style="
                 background: rgba(255, 255, 255, 0.1);
                 border: 1px solid rgba(255, 255, 255, 0.2);
@@ -8992,8 +9129,9 @@
                 text-transform: uppercase;
                 letter-spacing: 0.05em;
               "
+              onclick="copyShareUrl('product', document.getElementById('pd-title').innerText, this)"
             >
-              Share Link
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
             </button>
             <button
               onclick="closeProductDetail()"
@@ -10184,24 +10322,32 @@
         const folderParam = urlParams.get('folder');
         const fileParam = urlParams.get('file');
         const listingParam = urlParams.get('listing');
-        const targetName = fileParam || listingParam;
+        const refParam = urlParams.get('ref');
+        let targetName = fileParam || listingParam;
+        
+        if (!targetName && refParam) {
+            targetName = refParam;
+        }
 
         if (folderParam && typeof openFinderWindow === 'function') {
            openFinderWindow(folderParam);
         } else if (targetName) {
-           // Check if it's a BLUSTREET_DATA listing
+           // Check if it's a CONCIERGE_INVENTORY listing
            let isListing = false;
-           if (window.BLUSTREET_DATA) {
-             const listingData = window.BLUSTREET_DATA.find(d => d.name === targetName || d.name + ".png" === targetName);
+           if (window.CONCIERGE_INVENTORY) {
+             const listingData = window.CONCIERGE_INVENTORY.find(d => 
+               d.name === targetName || 
+               d.name + ".png" === targetName || 
+               d.name.toLowerCase() === targetName.toLowerCase()
+             );
              if (listingData) {
                isListing = true;
                const category = listingData.category === 'automotive' ? 'automotive' : (listingData.category === 'maritime' ? 'maritime' : listingData.category);
                if (typeof openFinderWindow === 'function') {
-                  // Instantly populate the data without waiting for the network fetch
-                  window.currentShowroomData = window.BLUSTREET_DATA.filter(d => d.category === category);
+                  window.currentShowroomData = window.CONCIERGE_INVENTORY.filter(d => d.category === category);
                   openFinderWindow(`concierge-${category}`);
                   setTimeout(() => {
-                    const index = window.currentShowroomData.findIndex(d => d.name === targetName || d.name + ".png" === targetName);
+                    const index = window.currentShowroomData.findIndex(d => d.name === listingData.name);
                     if (index !== -1 && typeof openProductDetail === 'function') {
                       openProductDetail(index, category);
                     }
@@ -10212,11 +10358,25 @@
            
            if (!isListing) {
              let foundFolder = "macintosh-hd";
+             let searchName = targetName;
+             
              if (typeof folderData !== 'undefined') {
+               let found = false;
                for (const [key, val] of Object.entries(folderData)) {
                  if (val && val.files) {
-                   if (val.files.some(f => f.name === targetName || f.name.replace(/\.png$/, "") === targetName)) {
+                   if (val.files.some(f => f.name === searchName || f.name.replace(/\.png$/, "") === searchName)) {
                      foundFolder = key;
+                     found = true;
+                     break;
+                   }
+                 }
+               }
+               if (!found) {
+                 const fallbackName = targetName.toLowerCase() + ".rfd";
+                 for (const [key, val] of Object.entries(folderData)) {
+                   if (val && val.files && val.files.some(f => f.name === fallbackName)) {
+                     foundFolder = key;
+                     searchName = fallbackName;
                      break;
                    }
                  }
@@ -10226,7 +10386,7 @@
                openFinderWindow(foundFolder);
                setTimeout(() => {
                  if (typeof handleFileDoubleClick === 'function') {
-                   handleFileDoubleClick(targetName);
+                   handleFileDoubleClick(searchName);
                  }
                }, 300);
              }
@@ -10235,16 +10395,51 @@
       }, 500);
     </script>
 
+    <style>
+      #site-footer-message-bar {
+        position: fixed; bottom: 0; left: 0; width: 100vw; 
+        background-color: rgba(28, 28, 28, 0.95); color: #a0a0a0; 
+        padding: 1rem 2rem; font-size: 0.75rem; font-family: monospace; 
+        border-top: 1px solid #333; z-index: 2147483647; 
+        display: none; opacity: 0; transition: opacity 1s; 
+        flex-direction: row; justify-content: space-between; align-items: center; 
+        gap: 1rem; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); 
+        backdrop-filter: blur(10px); box-sizing: border-box;
+      }
+      #site-footer-message-text {
+        margin-bottom: 0; flex: 1; text-align: left;
+      }
+      @media (max-width: 768px) {
+        #site-footer-message-bar {
+          flex-direction: column;
+          padding: 1rem;
+          gap: 0.5rem;
+          text-align: center;
+        }
+        #site-footer-message-text {
+          text-align: center;
+          font-size: 0.65rem !important;
+        }
+        #site-footer-message-text p {
+          font-size: 0.65rem !important;
+          line-height: 1.3 !important;
+        }
+        #site-ack-btn {
+          width: 100%;
+          padding: 10px !important;
+        }
+      }
+    </style>
     <!-- HARDCODED COOKIE BANNER -->
-    <div id="site-footer-message-bar" style="position: fixed !important; bottom: 0 !important; left: 0 !important; width: 100vw !important; background-color: rgba(28, 28, 28, 0.95) !important; color: #a0a0a0 !important; padding: 1rem 2rem !important; font-size: 0.75rem !important; font-family: monospace !important; border-top: 1px solid #333 !important; z-index: 2147483647 !important; display: none !important; opacity: 0; transition: opacity 1s; flex-direction: row !important; justify-content: space-between !important; align-items: center !important; gap: 1rem !important; box-shadow: 0 -10px 30px rgba(0,0,0,0.5) !important; backdrop-filter: blur(10px) !important; box-sizing: border-box !important;">
-      <div style="margin-bottom: 0; flex: 1; text-align: left;">
+    <div id="site-footer-message-bar">
+      <div id="site-footer-message-text">
         <p style="margin: 0; line-height: 1.5; color: #a0a0a0 !important; font-family: monospace !important; font-size: 0.75rem !important;">
           CIRE uses third-party cookies and other non-essential trackers for statistical analysis, to personalize your experience, and for advertising and social media purposes, including to track your use of our site, offer you advertisements that target your particular interests, improve our services, assist you more efficiently when browsing on our website and analyze the performance of our advertising campaigns. If you want more information about the trackers used, and your rights, read our 
           <button onclick="document.getElementById('cire-privacy-modal').style.display='flex'" style="color: #d0d0d0 !important; text-decoration: underline !important; background: none !important; border: none !important; cursor: pointer !important; font-family: inherit !important; font-size: inherit !important; padding: 0 !important;">Privacy Policy</button>.
         </p>
       </div>
-      <div style="display: flex; gap: 1rem;">
-        <button id="site-ack-btn" style="padding: 8px 24px !important; background-color: #fff !important; color: #000 !important; border: none !important; cursor: pointer !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; font-weight: bold !important;">
+      <div style="display: flex; gap: 1rem; width: 100%;">
+        <button id="site-ack-btn" style="padding: 8px 24px !important; background-color: #fff !important; color: #000 !important; border: none !important; cursor: pointer !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; font-weight: bold !important; width: 100%;">
           I Acknowledge & Agree
         </button>
       </div>
@@ -10268,16 +10463,56 @@
         async function logMetadata() {
           try {
             if (window.firebaseDB && window.firebaseAddDoc && window.firebaseCollection) {
+              // Collect IP-based location data (using a free, CORS-friendly API)
+              let locationData = {};
+              try {
+                const geoRes = await fetch('https://ipapi.co/json/');
+                if(geoRes.ok) {
+                  locationData = await geoRes.json();
+                }
+              } catch(e) {
+                console.warn('Could not fetch geolocation');
+              }
+
+              // Collect Performance Metrics
+              let loadTime = null;
+              if (window.performance && window.performance.timing) {
+                const timing = window.performance.timing;
+                loadTime = timing.loadEventEnd - timing.navigationStart;
+              }
+
               await window.firebaseAddDoc(
                 window.firebaseCollection(window.firebaseDB, "analytics_metadata"),
                 {
+                  // Browser & Device
                   userAgent: navigator.userAgent,
                   language: navigator.language,
+                  languages: navigator.languages,
                   screenResolution: `${window.screen.width}x${window.screen.height}`,
+                  windowSize: `${window.innerWidth}x${window.innerHeight}`,
                   platform: navigator.platform,
+                  vendor: navigator.vendor,
+                  hardwareConcurrency: navigator.hardwareConcurrency || 'unknown',
+                  deviceMemory: navigator.deviceMemory || 'unknown',
+                  connectionType: navigator.connection ? navigator.connection.effectiveType : 'unknown',
                   cookiesEnabled: navigator.cookieEnabled,
+                  doNotTrack: navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack || 'unknown',
+                  
+                  // Session & Page
+                  currentURL: window.location.href,
+                  referrer: document.referrer || 'direct',
+                  timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                  pageLoadTimeMs: loadTime,
+
+                  // Location (IP Based)
+                  ipAddress: locationData.ip || 'unknown',
+                  city: locationData.city || 'unknown',
+                  region: locationData.region || 'unknown',
+                  country: locationData.country_name || 'unknown',
+                  isp: locationData.org || 'unknown',
+                  
                   timestamp: window.firebaseServerTimestamp(),
-                  type: 'page_view_metadata'
+                  type: 'page_view_metadata_max'
                 }
               );
             }
@@ -10324,6 +10559,29 @@
           });
         }
       })();
+    </script>
+    <div id="link-copied-toast" style="position: fixed; top: 40px; left: 50%; transform: translateX(-50%); background: rgba(28,28,30,0.9); color: white; padding: 12px 24px; border-radius: 20px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; z-index: 99999999; display: none; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+      Link Copied
+    </div>
+    
+    <script>
+      window.copyShareUrl = function(type, id, btnElement) {
+        // Create a URL representing the content (even if just cosmetic for now)
+        const baseUrl = window.location.origin + window.location.pathname;
+        const url = baseUrl + "?ref=" + encodeURIComponent(id);
+        
+        navigator.clipboard.writeText(url).then(() => {
+          const toast = document.getElementById("link-copied-toast");
+          if (toast) {
+            toast.style.display = "block";
+            toast.style.opacity = "1";
+            setTimeout(() => {
+              toast.style.opacity = "0";
+              setTimeout(() => { toast.style.display = "none"; }, 300);
+            }, 2000);
+          }
+        });
+      };
     </script>
   </body>
 </html>

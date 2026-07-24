@@ -1,4 +1,4 @@
-[
+window.CONCIERGE_INVENTORY = [
     {
         "name": "Lamborghini Aventador Black",
         "price": "2799",
@@ -280,7 +280,7 @@
         "vehicle_info": {
             "Class/category": "Exotic SUV",
             "Make": "Lamborghini",
-            "Model": "Urus WBY",
+            "Model": "Urus Widebody",
             "Year": "2023-2024"
         },
         "local_image": "/assets/fleet/69d3ed187c55f2f0d0f6eb7a_13-(1)_rmbg.png"
@@ -1534,84 +1534,6 @@
         "local_image": "/assets/fleet/69065c5aa421e77807245910__0005_porsche-cayenne-coupe-blackblack_rmbg.png"
     },
     {
-        "name": "Chevrolet Tahoe Premere",
-        "price": "349",
-        "image": "/cars/69065c4c1dfaf534560b08be__0026_chevrolet-tahoe-premere_rmbg.png",
-        "valara_url": "https://app.valara.io/iframe/products/be02bfc9-61e5-4996-8744-4cfc1a1cbb17",
-        "category": "automotive",
-        "description": "Experience the exceptional craftsmanship and engineering of the Chevrolet Tahoe Premere. A pristine example of luxury and performance, available exclusively through CIRE Concierge.",
-        "performance": {
-            "0-60": "Varies",
-            "Top Speed": "Varies",
-            "Horsepower": "Varies"
-        },
-        "requirements": [
-            "Must be 25 years or older",
-            "Valid US or International Drivers License",
-            "Full Coverage Auto Insurance Verification",
-            "Refundable Security Deposit Required"
-        ],
-        "vehicle_info": {
-            "Class/category": "Exotic",
-            "Make": "Chevrolet",
-            "Model": "Tahoe Premere",
-            "Year": "2023-2024"
-        },
-        "local_image": "/assets/fleet/69065c4c1dfaf534560b08be__0026_chevrolet-tahoe-premere_rmbg.png"
-    },
-    {
-        "name": "Hyundai Kona",
-        "price": "100",
-        "image": "/cars/69c6f0f4a66b5a787f00296c_5_rmbg.png",
-        "valara_url": "https://app.valara.io/iframe/products/ef13b996-64f0-4989-b062-2886a0f51caf",
-        "category": "automotive",
-        "description": "Experience the exceptional craftsmanship and engineering of the Hyundai Kona. A pristine example of luxury and performance, available exclusively through CIRE Concierge.",
-        "performance": {
-            "0-60": "Varies",
-            "Top Speed": "Varies",
-            "Horsepower": "Varies"
-        },
-        "requirements": [
-            "Must be 25 years or older",
-            "Valid US or International Drivers License",
-            "Full Coverage Auto Insurance Verification",
-            "Refundable Security Deposit Required"
-        ],
-        "vehicle_info": {
-            "Class/category": "Exotic",
-            "Make": "Hyundai",
-            "Model": "Kona",
-            "Year": "2023-2024"
-        },
-        "local_image": "/assets/fleet/69c6f0f4a66b5a787f00296c_5_rmbg.png"
-    },
-    {
-        "name": "Mazda Cx-30",
-        "price": "99",
-        "image": "/cars/69065c4c1dfaf534560b08b5__0015_mazda-cx-30_rmbg.png",
-        "valara_url": "https://app.valara.io/iframe/products/0ca7cda5-a120-464c-a62c-010c59cfcefb",
-        "category": "automotive",
-        "description": "Experience the exceptional craftsmanship and engineering of the Mazda Cx-30. A pristine example of luxury and performance, available exclusively through CIRE Concierge.",
-        "performance": {
-            "0-60": "Varies",
-            "Top Speed": "Varies",
-            "Horsepower": "Varies"
-        },
-        "requirements": [
-            "Must be 25 years or older",
-            "Valid US or International Drivers License",
-            "Full Coverage Auto Insurance Verification",
-            "Refundable Security Deposit Required"
-        ],
-        "vehicle_info": {
-            "Class/category": "Exotic",
-            "Make": "Mazda",
-            "Model": "Cx-30",
-            "Year": "2023-2024"
-        },
-        "local_image": "/assets/fleet/69065c4c1dfaf534560b08b5__0015_mazda-cx-30_rmbg.png"
-    },
-    {
         "name": "Azimut 68",
         "price": "1500",
         "image": "/cars/699763cec41c306bdba9a902_OSCA-9-768x432_rmbg.png",
@@ -1637,4 +1559,4 @@
         },
         "local_image": "/assets/fleet/699763cec41c306bdba9a902_OSCA-9-768x432_rmbg.png"
     }
-]
+];
