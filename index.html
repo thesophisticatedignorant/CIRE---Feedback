@@ -10533,12 +10533,10 @@
         if (!forceBanner && localStorage.getItem('cire_cookie_consent_v6')) {
           banner.style.setProperty('display', 'none', 'important');
         } else {
-          // Delay appearance by 30 seconds (or immediately if debugging)
-          const delay = forceBanner ? 0 : 30000;
           setTimeout(() => {
             banner.style.setProperty('display', 'flex', 'important');
             setTimeout(() => banner.style.setProperty('opacity', '1', 'important'), 50);
-          }, delay);
+          }, 1000);
 
           document.getElementById('site-ack-btn').addEventListener('click', async function() {
             localStorage.setItem('cire_cookie_consent_v6', 'granted');
