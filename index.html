@@ -2381,19 +2381,20 @@
         /* Carousel position for mobile */
         .carousel-container {
           position: fixed !important;
-          bottom: 0 !important;
+          bottom: env(safe-area-inset-bottom, 20px) !important;
           top: auto !important;
-          z-index: 0 !important;
+          z-index: 10 !important;
           transform: none !important;
           width: 100vw !important;
+          padding-bottom: 10px !important;
         }
         .carousel-track-wrapper {
-          height: 90px !important; /* Scaled down height */
+          height: 75px !important; /* Scaled down height to fit both securely */
           padding: 5px 0 !important;
         }
         .carousel-item {
-          flex: 0 0 120px !important; /* Scaled down width */
-          font-size: 0.9rem !important; /* Scaled down text */
+          flex: 0 0 100px !important; /* Scaled down width */
+          font-size: 0.8rem !important; /* Scaled down text */
         }
       }
     </style>
