@@ -170,8 +170,8 @@ function poll() {
   var token = getAccessToken_();
   var props = PropertiesService.getScriptProperties();
   var found = [];
-
   var failures = [];
+  var pending = {}; // collection -> newest timestamp read, committed after send
 
   Object.keys(COLLECTIONS).forEach(function (name) {
     var cfg = COLLECTIONS[name];
@@ -196,10 +196,14 @@ function poll() {
                    fields: doc.fields, created: doc.created });
     });
 
-    /* Advance the watermark only past documents actually seen. If the notify
-       step throws, the next run picks these up again rather than losing them. */
+    /* Hold the new watermark back until the mail is actually away. Saving it
+       here instead cost a notification every time notify_ threw: the documents
+       had been read, the watermark had moved past them, and the next run
+       looked only at what came after - so a transient failure in the send step
+       silently swallowed whatever that run had picked up. Committed below,
+       after notify_ returns. */
     if (docs.length) {
-      props.setProperty('lastSeen_' + name, docs[docs.length - 1].created);
+      pending[name] = docs[docs.length - 1].created;
     }
   });
 
@@ -214,6 +218,14 @@ function poll() {
   }
 
   notify_(found);
+
+  /* Only now is it safe to forget them. If notify_ threw, nothing above was
+     committed and the next run reads the same documents again - a duplicate
+     notification beats a missing one. */
+  Object.keys(pending).forEach(function (name) {
+    props.setProperty('lastSeen_' + name, pending[name]);
+  });
+
   Logger.log('Notified about %s new inquir%s', found.length,
              found.length === 1 ? 'y' : 'ies');
 }
